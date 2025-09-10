@@ -32,7 +32,7 @@ model Workflow {
   nodes       Json
   connections Json
 
-  webhook   Webhook? @relation(fields: [webhookId], references: [id])
+  webhook   Webhook? @relation(fields: [webhookId], references: [id], onDelete: Cascade)
   webhookId String?  @unique
 
   triggerType TriggerType

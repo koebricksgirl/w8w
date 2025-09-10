@@ -4,14 +4,16 @@
   "type": "module",
   "private": true,
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "@types/redis": "^4.0.11"
   },
   "peerDependencies": {
     "typescript": "^5"
   },
   "dependencies": {
+    "@w8w/db": "workspace:*",
     "dotenv": "^17.2.2",
-    "zod": "^4.1.5",
-    "@w8w/db": "workspace:*"
+    "redis": "^5.8.2",
+    "zod": "^4.1.5"
   }
 }
