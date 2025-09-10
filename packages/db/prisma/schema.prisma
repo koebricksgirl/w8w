@@ -35,6 +35,8 @@ model Workflow {
   webhook   Webhook? @relation(fields: [webhookId], references: [id])
   webhookId String?  @unique
 
+  triggerType TriggerType
+
   executions Execution[]
 }
 
@@ -89,4 +91,10 @@ enum ExecStatus {
   RUNNING
   SUCCESS
   FAILED
+}
+
+enum TriggerType {
+  Webhook
+  Manual
+  Cron
 }
