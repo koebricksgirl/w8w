@@ -2,6 +2,7 @@ import type { Response } from "express";
 import { type AuthRequest } from "../middleware/auth";
 import { createWorkFlowSchema, updateWorkFlowSchema } from "@w8w/shared";
 import prisma from "@w8w/db";
+import { enqueueExecution } from "../redis/enqueue";
 
 export const createWorkFlow = async (req: AuthRequest, res: Response) => {
   try {
@@ -201,7 +202,7 @@ export const getWorkflows = async (req: AuthRequest, res: Response) => {
 
     res.status(200).json({
       message: "Workflows fetched successfully",
-      total: workflows.length ,
+      total: workflows.length,
       workflows
     });
     return
@@ -214,3 +215,51 @@ export const getWorkflows = async (req: AuthRequest, res: Response) => {
     return;
   }
 }
+
+export const runManualWorkflow = async (req: AuthRequest, res: Response) => {
+  try {
+    const userId = req.userId!;
+    const { workflowId } = req.params;
+
+    if (!workflowId) {
+      return res.status(400).json({ message: "workflowId is required" });
+    }
+
+    const workflow = await prisma.workflow.findUnique({
+      where: { id: workflowId },
+    });
+
+    if (!workflow || workflow.userId !== userId) {
+      return res.status(403).json({ message: "Not allowed to run this workflow" });
+    }
+
+    if (workflow.triggerType !== "Manual") {
+      return res.status(400).json({ message: "This workflow is not manual" });
+    }
+
+    const totalTasks = Object.keys(workflow.nodes as object).length;
+
+    const execution = await prisma.execution.create({
+      data: {
+        workflowId,
+        totalTasks,
+       output: { triggerPayload: {} },
+      },
+    });
+
+    await enqueueExecution(execution.id, workflowId, req.body ?? {});
+
+    res.status(200).json({
+      message: "Manual workflow triggered",
+      executionId: execution.id,
+    });
+    return
+  } catch (error: any) {
+    console.error("Error running manual workflow:", error.message);
+    res.status(500).json({
+      message: "Internal server error",
+      error: error.message,
+    });
+    return
+  }
+};

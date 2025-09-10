@@ -2,7 +2,7 @@ import express from "express"
 import { signin, signup, verify } from "../controllers/user";
 import { authMiddleware } from "../middleware/auth";
 import { deleteCredential, getCredentials, postCredentials, updateCredential } from "../controllers/credentials";
-import { createWorkFlow, deleteWorkFlow, getWorkflows, updateWorkFlow } from "../controllers/workflow";
+import { createWorkFlow, deleteWorkFlow, getWorkflows, runManualWorkflow, updateWorkFlow } from "../controllers/workflow";
 
 const router = express.Router();
 
@@ -18,6 +18,7 @@ router.delete("/credentials/delete/:credentialId", authMiddleware, deleteCredent
 
 
 router.post("/workflows/post", authMiddleware, createWorkFlow);
+router.post("/workflows/manual/run/:workflowId", authMiddleware, runManualWorkflow);
 router.get("/workflows/get",authMiddleware, getWorkflows);
 router.put("/workflows/update/:workflowId",authMiddleware, updateWorkFlow);
 router.delete("/workflows/delete/:workflowId", authMiddleware, deleteWorkFlow);
