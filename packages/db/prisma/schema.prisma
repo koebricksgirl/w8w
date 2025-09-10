@@ -24,7 +24,7 @@ model User {
 
 model Workflow {
   id     String @id @default(uuid())
-  User   User   @relation(fields: [userId], references: [id])
+  User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 
   title       String
@@ -44,8 +44,6 @@ model Webhook {
   id     String  @id @default(uuid())
   title  String
   method Methods @default(GET)
-  path   String
-  header String
   secret String?
 
   workflow Workflow?
@@ -57,13 +55,13 @@ model Credentials {
   platform Platform
   data     Json
 
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 }
 
 model Execution {
   id         String     @id @default(uuid())
-  workflow   Workflow   @relation(fields: [workflowId], references: [id])
+  workflow   Workflow   @relation(fields: [workflowId], references: [id], onDelete: Cascade)
   workflowId String
   status     ExecStatus @default(PENDING)
   tasksDone  Int        @default(0)

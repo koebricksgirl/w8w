@@ -5,6 +5,8 @@ import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import { PORT,NODE_ENV } from "./config";
 import allRoutes from "./routes/router"
+import webHookRouter from "./routes/webhook"
+import prisma from "@w8w/db";
 
 dotenv.config();
 
@@ -30,17 +32,34 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/api/v1",allRoutes);
+app.use("/",webHookRouter);
 
 app.listen(PORT, async () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
 
 process.on('SIGINT', async () => {
-  console.log('Received SIGINT, closing DB connection...');
-  process.exit(0);
+    try {
+        await Promise.all([
+            prisma.$disconnect()
+        ]);
+        console.log('Server closed');
+        process.exit(0);
+    } catch (error) {
+        console.error('Server error:', error);
+        process.exit(1);
+    }
 });
 
 process.on('SIGTERM', async () => {
-  console.log('Received SIGTERM, closing DB connection...');
-  process.exit(0);
+    try {
+        await Promise.all([
+            prisma.$disconnect()
+        ]);
+        console.log('Server closed');
+        process.exit(0);
+    } catch (error) {
+        console.error('Server error:', error);
+        process.exit(1);
+    }
 });
