@@ -49,6 +49,7 @@
     "packages/shared": {
       "name": "@w8w/shared",
       "dependencies": {
+        "@w8w/db": "workspace:*",
         "dotenv": "^17.2.2",
         "zod": "^4.1.5",
       },
