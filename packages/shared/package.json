@@ -1,16 +1,16 @@
 {
-  "name": "@w8w/db",
+  "name": "@w8w/shared",
   "module": "index.ts",
   "type": "module",
   "private": true,
   "devDependencies": {
-    "@types/bun": "latest",
-    "prisma": "^6.15.0"
+    "@types/bun": "latest"
   },
   "peerDependencies": {
     "typescript": "^5"
   },
   "dependencies": {
-    "@prisma/client": "^6.15.0"
+    "dotenv": "^17.2.2",
+    "zod": "^4.1.5"
   }
 }
