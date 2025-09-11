@@ -75,6 +75,7 @@ model Execution {
 enum Platform {
   Telegram
   ResendEmail
+  Gemini
 }
 
 enum Methods {

@@ -1,4 +1,5 @@
 export enum Platform {
     ResendEmail = "ResendEmail",
-    Telegram = "Telegram"
+    Telegram = "Telegram",
+    Gemini = "Gemini"
 }
