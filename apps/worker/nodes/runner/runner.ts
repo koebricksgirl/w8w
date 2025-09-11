@@ -1,3 +1,4 @@
+import { runGeminiNode } from "../gemini/gemini";
 import { sendEmail } from "../resend";
 import { sendTelegramMessage } from "../telegram";
 
@@ -10,6 +11,9 @@ export async function runNode(node:any,context: Record<string,any>) {
             case "Telegram":
                 return await sendTelegramMessage(node.config, node.credentialsId, context);
 
+            case "Gemini":
+                return runGeminiNode(node,context);
+                
             default:
                throw new Error(`Unknown node type: ${node.type}`);
         }

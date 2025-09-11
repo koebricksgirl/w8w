@@ -15,10 +15,14 @@
     "typescript": "^5"
   },
   "dependencies": {
+    "@langchain/core": "^0.3.75",
+    "@langchain/google-genai": "^0.2.17",
     "@w8w/db": "workspace:*",
     "@w8w/shared": "workspace:*",
+    "langchain": "^0.3.33",
     "mustache": "^4.2.0",
     "node-fetch": "^3.3.2",
-    "resend": "^6.0.3"
+    "resend": "^6.0.3",
+    "zod": "^4.1.7"
   }
 }
