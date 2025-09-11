@@ -1,8 +1,9 @@
+import { Platform } from '@w8w/db';
 import * as z from 'zod';
 
 const nodeSchema = z.object({
   id: z.string(),
-  type: z.enum(["ResendEmail", "Telegram"]),
+  type: z.enum([Platform.ResendEmail,Platform.Telegram,Platform.Gemini]),
   config: z.record(z.string(), z.any()),
   credentialsId: z.string().optional()
 });
