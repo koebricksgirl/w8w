@@ -15,7 +15,7 @@ const app: Application = express();
 app.use(express.json());
 
 const corsOptions={
-  origin: NODE_ENV === 'dev'?'http://localhost:3000':'https://w8w.rudrasankha.com',
+  origin: NODE_ENV === 'dev'?'http://localhost:5173':'https://w8w.rudrasankha.com',
   method:['GET','POST','PUT','DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials:true
