@@ -45,7 +45,7 @@ export const auth = {
 export const workflows = {
   list: async (): Promise<Workflow[]> => {
     const response = await api.get("/workflows/get");
-    return response.data;
+    return response.data.workflows;
   },
   create: async (data: WorkflowInput): Promise<Workflow> => {
     const response = await api.post("/workflows/post", data);

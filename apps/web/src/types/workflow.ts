@@ -26,6 +26,7 @@ export interface Workflow {
   nodes: Record<string, WorkflowNode>;
   connections: Record<string, string[]>;
   webhook?: WorkflowWebhook;
+  webhookId?: string;
   userId: string;
   createdAt: string;
   updatedAt: string;
