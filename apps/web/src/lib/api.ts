@@ -51,16 +51,16 @@ export const workflows = {
     const response = await api.post("/workflows/post", data);
     return response.data;
   },
-  get: async (id: string): Promise<Workflow> => {
-    const response = await api.get(`/workflows/get/${id}`);
+  get: async (workflowId: string): Promise<Workflow> => {
+    const response = await api.get(`/workflows/get/${workflowId}`);
     return response.data;
   },
-  update: async (id: string, data: Partial<WorkflowInput>): Promise<Workflow> => {
-    const response = await api.put(`/workflows/update/${id}`, data);
+  update: async (workflowId: string, data: Partial<WorkflowInput>): Promise<Workflow> => {
+    const response = await api.put(`/workflows/update/${workflowId}`, data);
     return response.data;
   },
-  delete: async (id: string): Promise<void> => {
-    await api.delete(`/workflows/delete/${id}`);
+  delete: async (workflowId: string): Promise<void> => {
+    await api.delete(`/workflows/delete/${workflowId}`);
   },
   run: async (input: WorkflowRunInput): Promise<WorkflowExecution> => {
     const response = await api.post(`/workflows/manual/run/${input.workflowId}`, {
@@ -79,15 +79,15 @@ export const credentials = {
     const response = await api.post("/credentials/post", data);
     return response.data;
   },
-  get: async (id: string): Promise<WorkflowCredential> => {
-    const response = await api.get(`/credentials/get/${id}`);
+  get: async (credentialId: string): Promise<WorkflowCredential> => {
+    const response = await api.get(`/credentials/get/${credentialId}`);
     return response.data;
   },
-  update: async (id: string, data: Partial<WorkflowCredentialInput>): Promise<WorkflowCredential> => {
-    const response = await api.put(`/credentials/update/${id}`, data);
+  update: async (credentialId: string, data: Partial<WorkflowCredentialInput>): Promise<WorkflowCredential> => {
+    const response = await api.put(`/credentials/update/${credentialId}`, data);
     return response.data;
   },
-  delete: async (id: string): Promise<void> => {
-    await api.delete(`/credentials/delete/${id}`);
+  delete: async (credentialId: string): Promise<void> => {
+    await api.delete(`/credentials/delete/${credentialId}`);
   },
 };
