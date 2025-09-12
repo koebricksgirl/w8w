@@ -1,24 +1,15 @@
 import { Link } from 'react-router-dom';
 import { useThemeStore } from '../store/useThemeStore';
 import { PlusIcon, PlayIcon } from '@radix-ui/react-icons';
-import { useEffect } from 'react';
-import { workflows } from '../lib/api';
-import { useWorkflowsStore } from '../store/useWorkflowStore';
 import { renderWorkflowSequence } from '../utils/renderWorkflowSequence';
 import { nodeIcons } from '../lib/nodeIcons';
+import { useWorkflows } from '../hooks/useWorkflows';
 
 export default function Dashboard() {
   const { theme } = useThemeStore();
   const isDark = theme === 'dark';
-  const setWorkflows = useWorkflowsStore(state => state.setWorkflows);
-  const workflowsList = useWorkflowsStore(state => state.workflows)
 
-  useEffect(() => {
-    (async () => {
-      const data = await workflows.list();
-      setWorkflows(data);
-    })();
-  }, [setWorkflows]);
+  const { data: workflowsList = [], isLoading, isError } = useWorkflows();
 
   return (
     <div className="py-32 px-4">
@@ -41,7 +32,17 @@ export default function Dashboard() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {workflowsList.length === 0 && (
+          {isLoading && (
+            <div className="col-span-full text-center text-zinc-400">
+              Loading workflows...
+            </div>
+          )}
+          {isError && (
+            <div className="col-span-full text-center text-red-500">
+              Failed to load workflows.
+            </div>
+          )}
+          {!isLoading && workflowsList.length === 0 && (
             <div className="col-span-full text-center text-zinc-400">
               No workflows found.
             </div>
