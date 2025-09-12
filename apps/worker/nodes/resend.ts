@@ -17,7 +17,7 @@ export async function sendEmail(config: any, credentialId: string, context: any)
         const body = Mustache.render(config.body, context);
 
         await resend.emails.send({
-            from: 'onboarding@resend.dev',
+            from: data.resendDomainMail || 'onboarding@resend.dev',
             to,
             subject,
             html: body
