@@ -16,12 +16,14 @@ export async function sendEmail(config: any, credentialId: string, context: any)
         const subject = Mustache.render(config.subject, context);
         const body = Mustache.render(config.body, context);
 
-        await resend.emails.send({
+       const result =  await resend.emails.send({
             from: data.resendDomainMail || 'onboarding@resend.dev',
             to,
             subject,
             html: body
         })
+ 
+        console.log(result)
 
         return { to, subject, body }
     } catch (error: any) {

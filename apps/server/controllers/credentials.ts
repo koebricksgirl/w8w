@@ -74,6 +74,49 @@ export const getCredentials = async (req:AuthRequest,res: Response): Promise<voi
     }
 }
 
+
+
+export const getCredentialById = async (req:AuthRequest,res: Response): Promise<void> => {
+    try {
+        const userId = req.userId!;
+        const { credentialId } = req.params;
+
+        const credential = await prisma.credentials.findUnique({
+          where: {
+            id: credentialId
+          }
+        })
+
+        if(!credential) {
+            res.status(404).json({
+                message: "Credential not found"
+            })
+            return
+        }
+
+        if(credential?.userId !== userId) {
+            res.status(403).json({
+                message: "You don't have access to this specific credential"
+            })
+            return
+        }
+
+        res.status(200).json({
+            message: "Credential fetched Successfully",
+            credential
+        })
+     return
+    } catch (error:any) {
+          console.log("Error: ", error.message);
+        res.status(500).json({
+            message: "Internal server error",
+            error: error.message
+        });
+        return;
+    }
+}
+
+
 export const deleteCredential = async (req:AuthRequest,res: Response): Promise<void> => {
     try {
         const userId = req.userId!;
@@ -165,3 +208,4 @@ export const updateCredential = async (req:AuthRequest,res: Response): Promise<v
         return;
     }
 }
+

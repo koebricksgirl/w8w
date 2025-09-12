@@ -216,6 +216,48 @@ export const getWorkflows = async (req: AuthRequest, res: Response) => {
   }
 }
 
+export const getWorkflowById = async (req: AuthRequest, res: Response) => {
+  try {
+    const userId = req.userId!;
+    const { workflowId } = req.params;
+
+    const workflow = await prisma.workflow.findUnique({
+      where: {
+        id: workflowId
+      }
+    })
+
+
+    if(!workflow) {
+      res.status(404).json({
+          message: "Workflow not found"
+      })
+      return
+  }
+
+
+    if(workflow?.userId !== userId) {
+      res.status(404).json({
+        message: "You don't have access to this workflow"
+    })
+    return
+    }
+
+    res.status(200).json({
+      message: "Workflows fetched successfully",
+      workflow
+    });
+    return
+  } catch (error: any) {
+    console.log("Error: ", error.message);
+    res.status(500).json({
+      message: "Internal server error",
+      error: error.message
+    });
+    return;
+  }
+}
+
 export const runManualWorkflow = async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.userId!;
