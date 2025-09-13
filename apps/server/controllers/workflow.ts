@@ -223,28 +223,41 @@ export const getWorkflowById = async (req: AuthRequest, res: Response) => {
 
     const workflow = await prisma.workflow.findUnique({
       where: {
-        id: workflowId
+        id: workflowId,
+      },
+      select: {
+        id: true,
+        User: true,
+        nodes: true,
+        enabled: true,
+        connections: true,
+        title: true,
+        triggerType: true,
+        executions: true,
+        webhook: true,
+        webhookId: true,
+        userId: true
       }
     })
 
 
-    if(!workflow) {
+    if (!workflow) {
       res.status(404).json({
-          message: "Workflow not found"
+        message: "Workflow not found"
       })
       return
-  }
+    }
 
 
-    if(workflow?.userId !== userId) {
+    if (workflow?.userId !== userId) {
       res.status(404).json({
         message: "You don't have access to this workflow"
-    })
-    return
+      })
+      return
     }
 
     res.status(200).json({
-      message: "Workflows fetched successfully",
+      message: "Workflow fetched successfully",
       workflow
     });
     return

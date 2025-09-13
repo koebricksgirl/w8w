@@ -60,7 +60,7 @@ export const getCredentials = async (req:AuthRequest,res: Response): Promise<voi
         })
 
         res.status(200).json({
-            message: "Credentials Posted successfully",
+            message: "Credentials fetched successfully",
             credentials
         })
      return

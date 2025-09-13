@@ -56,11 +56,12 @@ export async function runGeminiNode(node: any, context: any) {
         
         When responding to user requests:
         - If the task can be accomplished using available tools, use them appropriately
-        - If no tools are needed, respond naturally with your knowledge
+        - Always see if tools are needed or not before responsing , If no tools are needed, respond naturally with your knowledge
         - Always provide clear, helpful responses
         - Use tools when they can enhance your response or perform specific actions
         -  When asked to return JSON, return only valid JSON without extra text or backticks.
-        
+
+          You can generate content freely when tools aren't needed
         Choose the best approach based on what the user is asking for.`
       ],
       ["user", "{input}"],
@@ -111,6 +112,7 @@ export async function runGeminiNode(node: any, context: any) {
 
     return {
       text: rawText,
+      query: String(prompt),  
       intermediateSteps: result.intermediateSteps
     }
 

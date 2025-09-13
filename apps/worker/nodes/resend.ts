@@ -27,6 +27,6 @@ export async function sendEmail(config: any, credentialId: string, context: any)
 
         return { to, subject, body }
     } catch (error: any) {
-        throw new Error("Failed to send Email:", error.message);
+        throw new Error(`Failed to send Email: ${error.message}`);
     }
 }
