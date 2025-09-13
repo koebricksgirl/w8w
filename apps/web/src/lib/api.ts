@@ -11,6 +11,8 @@ import type {
 
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000/api/v1";
 
+export const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8000";
+
 export const api = axios.create({
   baseURL: BASE_URL,
   headers: {
@@ -47,15 +49,15 @@ export const workflows = {
     const response = await api.get("/workflows/get");
     return response.data.workflows;
   },
-  create: async (data: WorkflowInput): Promise<Workflow> => {
+  create: async (data: WorkflowInput): Promise<{ message: string; workflow: Workflow; execution?: WorkflowExecution }> => {
     const response = await api.post("/workflows/post", data);
     return response.data;
   },
-  get: async (workflowId: string): Promise<Workflow> => {
+  get: async (workflowId: string): Promise<{ message: string; workflow: Workflow }> => {
     const response = await api.get(`/workflows/get/${workflowId}`);
     return response.data;
   },
-  update: async (workflowId: string, data: Partial<WorkflowInput>): Promise<Workflow> => {
+  update: async (workflowId: string, data: Partial<WorkflowInput>): Promise<{ message: string; workflow: Workflow }> => {
     const response = await api.put(`/workflows/update/${workflowId}`, data);
     return response.data;
   },
@@ -71,7 +73,7 @@ export const workflows = {
 };
 
 export const credentials = {
-  list: async (): Promise<WorkflowCredential[]> => {
+  list: async (): Promise<{ message: string; credentials: WorkflowCredential[] }> => {
     const response = await api.get("/credentials/get");
     return response.data;
   },

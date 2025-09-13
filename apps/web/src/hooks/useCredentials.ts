@@ -1,8 +1,14 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { credentials } from "../lib/api";
+import type { WorkflowCredential } from "../types/workflow";
+
+interface CredentialsResponse {
+  message: string;
+  credentials: WorkflowCredential[];
+}
 
 export function useCredentials() {
-  return useQuery({
+  return useQuery<CredentialsResponse>({
     queryKey: ["credentials"],
     queryFn: credentials.list,
   });

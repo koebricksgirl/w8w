@@ -76,10 +76,11 @@ export interface WorkflowRunInput {
 
 export interface FlowNodeData {
   [key: string]: unknown;
+  id: string;
   label: string;
   type: Platform;
   config: Record<string, any>;
-  credentialsId?: string;
+  credentialsId?: string | null;
 }
 
 export const flowToWorkflowNodes = (nodes: Node<FlowNodeData>[]): Record<string, WorkflowNode> => {
@@ -89,7 +90,7 @@ export const flowToWorkflowNodes = (nodes: Node<FlowNodeData>[]): Record<string,
       id: node.id,
       type: node.data.type,
       config: node.data.config,
-      credentialsId: node.data.credentialsId,
+      credentialsId: node.data.credentialsId || undefined,
     };
     return acc;
   }, {} as Record<string, WorkflowNode>);
@@ -105,21 +106,26 @@ export const flowToWorkflowConnections = (edges: Edge[]): Record<string, string[
   }, {} as Record<string, string[]>);
 };
 
-export const workflowToFlowNodes = (workflow: Workflow): Node<FlowNodeData>[] => {
+export const workflowToFlowNodes = (workflow: Workflow | null | undefined): Node<FlowNodeData>[] => {
+  if (!workflow || !workflow.nodes) return [];
+  
   return Object.entries(workflow.nodes).map(([id, node], index) => ({
     id,
     type: node.type,
     position: { x: 250 * index, y: 100 },
     data: {
-      label: node.type,
+      id,
+      label: `${node.type} ${index + 1}`,
       type: node.type,
-      config: node.config,
+      config: node.config || {},
       credentialsId: node.credentialsId,
     },
   }));
 };
 
-export const workflowToFlowEdges = (workflow: Workflow): Edge[] => {
+export const workflowToFlowEdges = (workflow: Workflow | null | undefined): Edge[] => {
+  if (!workflow || !workflow.connections) return [];
+  
   return Object.entries(workflow.connections).flatMap(([source, targets]) =>
     targets.map((target) => ({
       id: `${source}-${target}`,

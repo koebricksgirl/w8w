@@ -2,6 +2,7 @@ import { memo } from 'react';
 import { Handle, Position } from '@xyflow/react';
 import { useThemeStore } from '../../store/useThemeStore';
 import type { FlowNodeData } from '../../types/workflow';
+import { nodeIcons } from '../../lib/nodeIcons';
 
 type CustomNodeProps = {
   data: FlowNodeData;
@@ -14,21 +15,47 @@ const BaseNode = ({ data }: CustomNodeProps) => {
 
   if (!data) return null;
 
+  const tooltipContent = `Node ID: ${data.id}
+Type: ${data.type}
+Use in config as: {{ $node.${data.id} }}
+${data.type === 'Gemini' ? '\nOutput: {{ $node.' + data.id + '.text }}' : ''}`;
+
   return (
     <div
-      className={`px-4 py-2 shadow-md rounded-md border ${
+      className={`px-4 py-2 shadow-md rounded-md border group relative ${
         isDark ? 'border-zinc-700' : 'border-zinc-200'
       } ${
         isDark ? 'bg-zinc-800 text-white' : 'bg-white text-zinc-900'
       }`}
+      title={tooltipContent}
     >
-      <div className="flex items-center">
-        <div className={`w-2 h-2 rounded-full mr-2 ${
+      
+      <div className={`absolute bottom-full left-0 mb-2 p-2 rounded text-sm whitespace-pre
+        opacity-0 group-hover:opacity-100 transition-opacity
+        ${isDark ? 'bg-zinc-800 text-white' : 'bg-white text-zinc-900'}
+        border ${isDark ? 'border-zinc-700' : 'border-zinc-200'}
+        shadow-lg z-50
+      `}>
+        {tooltipContent}
+      </div>
+      <div className="flex items-center justify-center relative">
+        <div className={`absolute -top-1 -right-1 w-3 h-3 rounded-full ${
           data.credentialsId 
             ? 'bg-green-500' 
             : 'bg-yellow-500'
         }`} />
-        <div className="text-sm font-bold">{data.label}</div>
+        <div className="relative">
+          <img 
+            src={nodeIcons[data.type]} 
+            alt={data.label}
+            className="w-8 h-8"
+          />
+          <div className={`absolute -bottom-1 -right-1 text-[10px] px-1 rounded-sm
+            ${isDark ? 'bg-zinc-700 text-zinc-300' : 'bg-zinc-200 text-zinc-700'}
+          `}>
+            {String(data.id)}
+          </div>
+        </div>
       </div>
 
       <Handle

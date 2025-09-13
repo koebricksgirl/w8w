@@ -10,11 +10,13 @@ export function useWorkflowEditor(id?: string) {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node<FlowNodeData>>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
 
-  const { data: workflow, isLoading } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['workflow', id],
     queryFn: () => workflows.get(id!),
     enabled: !!id,
   });
+
+  const workflow = data?.workflow;
 
   const createMutation = useMutation({
     mutationFn: (data: WorkflowInput) => workflows.create(data),
@@ -53,9 +55,11 @@ export function useWorkflowEditor(id?: string) {
       };
 
       if (id) {
-        await updateMutation.mutateAsync({ id, data });
+        const updated = await updateMutation.mutateAsync({ id, data });
+        return updated;
       } else {
-        await createMutation.mutateAsync(data);
+        const created = await createMutation.mutateAsync(data);
+        return created;
       }
     },
     [nodes, edges, id, createMutation, updateMutation],

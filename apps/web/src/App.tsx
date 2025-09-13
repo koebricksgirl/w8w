@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 import { useThemeStore } from "./store/useThemeStore";
 import { useAuthStore } from "./store/useAuthStore";
 import { ThemeProvider } from "./components/ThemeProvider";
@@ -10,6 +11,7 @@ import Contact from "./pages/Contact";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import WorkflowEditor from "./pages/WorkflowEditor";
+import WorkflowEdit from "./pages/WorkflowEdit";
 import './styles/reactflow.css';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -21,6 +23,7 @@ export default function App() {
   const { theme } = useThemeStore();
   
   return (
+    <ErrorBoundary>
     <ThemeProvider>
     <div className={`min-h-screen flex flex-col ${
       theme === 'dark' 
@@ -46,7 +49,7 @@ export default function App() {
           } />
           <Route path="/workflows/editor/:id" element={
             <ProtectedRoute>
-              <WorkflowEditor />
+              <WorkflowEdit />
             </ProtectedRoute>
           } />
         </Routes>
@@ -54,5 +57,6 @@ export default function App() {
       <Footer />
     </div>
     </ThemeProvider>
+    </ErrorBoundary>
   );
 }
