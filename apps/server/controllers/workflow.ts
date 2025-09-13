@@ -204,7 +204,7 @@ export const getWorkflows = async (req: AuthRequest, res: Response) => {
 
     const workflows = await prisma.workflow.findMany({
       where: { userId },
-      include: { webhook: true, executions: true }
+      include: { webhook: true }
     })
 
     res.status(200).json({
@@ -240,7 +240,6 @@ export const getWorkflowById = async (req: AuthRequest, res: Response) => {
         connections: true,
         title: true,
         triggerType: true,
-        executions: true,
         webhook: true,
         webhookId: true,
         userId: true
