@@ -39,9 +39,9 @@ export const credentialsPostSchema = z.discriminatedUnion("platform", [
 ]);
 
 export const credentialsUpdateSchema = z.discriminatedUnion("platform", [
-  resendSchema.partial(),
-  telegramSchema.partial(),
-  geminiSchema.partial(),
+  resendSchema,
+  telegramSchema,
+  geminiSchema,
 ]);
 
 

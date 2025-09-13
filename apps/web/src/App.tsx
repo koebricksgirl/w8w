@@ -13,6 +13,7 @@ import Dashboard from "./pages/Dashboard";
 import WorkflowEditor from "./pages/WorkflowEditor";
 import WorkflowEdit from "./pages/WorkflowEdit";
 import './styles/reactflow.css';
+import Credentials from "./pages/Credentials/Credentials";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuthStore();
@@ -50,6 +51,11 @@ export default function App() {
           <Route path="/workflows/editor/:id" element={
             <ProtectedRoute>
               <WorkflowEdit />
+            </ProtectedRoute>
+          } />
+             <Route path="/credentials" element={
+            <ProtectedRoute>
+              <Credentials />
             </ProtectedRoute>
           } />
         </Routes>
