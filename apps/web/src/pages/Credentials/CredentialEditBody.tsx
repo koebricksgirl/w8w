@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Platform } from "@w8w/db";
-import { PLATFORM_FIELDS, PLATFORM_OPTIONS } from "../../lib/platforms";
+import { PLATFORM_FIELDS, PLATFORM_OPTIONS } from "../../utils/platforms";
 import type { Credential } from "../../types/credential";
 
 export function CredentialEditBody({
