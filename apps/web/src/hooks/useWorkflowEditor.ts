@@ -44,6 +44,9 @@ export function useWorkflowEditor(id?: string) {
   const saveWorkflow = useCallback(
     async (title: string, triggerType: 'Manual' | 'Webhook', webhookConfig?: any) => {
       const workflowNodes = flowToWorkflowNodes(nodes);
+      console.log('Nodes with positions:', nodes); 
+    console.log('Converted workflow nodes:', workflowNodes); 
+
       const workflowConnections = flowToWorkflowConnections(edges);
 
       const data: WorkflowInput = {
@@ -54,6 +57,8 @@ export function useWorkflowEditor(id?: string) {
         ...(webhookConfig && { webhook: webhookConfig }),
       };
 
+      console.log('Data being sent to API:', data);
+      
       if (id) {
         const updated = await updateMutation.mutateAsync({ id, data });
         return updated;

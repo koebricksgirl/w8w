@@ -10,6 +10,7 @@ export interface WorkflowNode {
   type: Platform;
   config: Record<string, any>;
   credentialsId?: string;
+  position?: { x: number; y: number };
 }
 
 export interface WorkflowWebhook {
@@ -91,6 +92,10 @@ export const flowToWorkflowNodes = (nodes: Node<FlowNodeData>[]): Record<string,
       type: node.data.type,
       config: node.data.config,
       credentialsId: node.data.credentialsId || undefined,
+      position: { 
+        x: Math.round(node.position.x),
+         y: Math.round(node.position.y)
+        },
     };
     return acc;
   }, {} as Record<string, WorkflowNode>);
@@ -109,10 +114,13 @@ export const flowToWorkflowConnections = (edges: Edge[]): Record<string, string[
 export const workflowToFlowNodes = (workflow: Workflow | null | undefined): Node<FlowNodeData>[] => {
   if (!workflow || !workflow.nodes) return [];
   
-  return Object.entries(workflow.nodes).map(([id, node], index) => ({
+  return Object.entries(workflow.nodes).map(([id, node], index) => {
+    const nodeWithPosition = node as WorkflowNode & { position?: { x: number; y: number } };
+
+    return {
     id,
     type: node.type,
-    position: { x: 250 * index, y: 100 },
+    position: nodeWithPosition.position ||  { x: 250 * index, y: 100 },
     data: {
       id,
       label: `${node.type} ${index + 1}`,
@@ -120,7 +128,8 @@ export const workflowToFlowNodes = (workflow: Workflow | null | undefined): Node
       config: node.config || {},
       credentialsId: node.credentialsId,
     },
-  }));
+  }
+});
 };
 
 export const workflowToFlowEdges = (workflow: Workflow | null | undefined): Edge[] => {

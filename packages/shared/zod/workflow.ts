@@ -5,7 +5,11 @@ const nodeSchema = z.object({
   id: z.string(),
   type: z.enum([Platform.ResendEmail,Platform.Telegram,Platform.Gemini]),
   config: z.record(z.string(), z.any()),
-  credentialsId: z.string().optional()
+  credentialsId: z.string().optional(),
+  position: z.object({  
+    x: z.number(),
+    y: z.number()
+  }).optional()
 });
 
 const webhookSchema = z.object({

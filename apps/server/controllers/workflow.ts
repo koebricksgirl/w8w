@@ -17,7 +17,11 @@ export const createWorkFlow = async (req: AuthRequest, res: Response) => {
       return
     }
 
+    // console.log(result)
+
     const newWorkflow = result.data;
+
+    // console.log(newWorkflow)
 
     let webhookRecord = null;
 
@@ -88,8 +92,11 @@ export const updateWorkFlow = async (req: AuthRequest, res: Response) => {
         errors: result.error.issues
       });
     }
+    // console.log(result)
 
     const updateWorkFlowData = result.data;
+
+    // console.log(updateWorkFlowData)
 
     const existingWorkflow = await prisma.workflow.findFirst({
       where: { id: workflowId, userId },
