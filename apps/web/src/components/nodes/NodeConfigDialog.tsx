@@ -229,7 +229,7 @@ export default function NodeConfigDialog({ node, credentials, onClose, onSave }:
                 Enable Memory
               </label>
               <p className="text-sm text-zinc-500">
-                If enabled, Gemini will recall the last 25 exchanges for this workflow.
+                If enabled, Gemini will recall the latest 25 conversations for this workflow.
               </p>
             </div>
           )}
