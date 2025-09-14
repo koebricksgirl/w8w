@@ -290,7 +290,7 @@ function WorkflowEditContent() {
                         variant={BackgroundVariant.Dots}
                         gap={12}
                         size={1}
-                        color={isDark ? "#666" : "#eee"}
+                        color={isDark ? "#666" : "#ccc"}
                     />
                 </ReactFlow>
             </div>

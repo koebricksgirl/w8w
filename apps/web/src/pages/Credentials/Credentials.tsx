@@ -1,4 +1,4 @@
-import { EyeOpenIcon, Pencil2Icon, PlusIcon, TrashIcon } from "@radix-ui/react-icons";
+import { PlayIcon , Pencil2Icon, PlusIcon, TrashIcon } from "@radix-ui/react-icons";
 import { useCreateCredential, useCredentials, useDeleteCredential, useUpdateCredential } from "../../hooks/useCredentials";
 import { useThemeStore } from "../../store/useThemeStore";
 import { nodeIcons } from "../../lib/nodeIcons";
@@ -87,7 +87,7 @@ export default function Credentials() {
                                             : 'hover:bg-zinc-100'
                                             } transition-colors`}
                                         onClick={() => { setSelectedCredential(credential); setModalType("view"); }}>
-                                        <EyeOpenIcon className="w-5 h-5" />
+                                        <PlayIcon className="w-5 h-5" />
                                     </button>
                                     <button
                                         onClick={() => { setSelectedCredential(credential); setModalType("edit") }}
@@ -186,7 +186,7 @@ export default function Credentials() {
                         <p className="text-zinc-400 my-4">Would you like to delete this credential?</p>
                         <div className="flex gap-4">
                         <button
-                            className="text-white bg-red-500 py-2 px-4 rounded-lg"
+                            className="text-white bg-red-500 py-2 px-4 rounded-lg cursor-pointer"
                             onClick={() => {
                                 if (!selectedCredential?.id) return;
                                 deleteCredential.mutate(selectedCredential.id, {
@@ -199,7 +199,7 @@ export default function Credentials() {
                         >
                             Delete
                         </button>
-                        <button className="text-white bg-blue-600 rounded-lg py-2 px-4" onClick={() => setModalType(null)}>Cancel</button>
+                        <button className="text-white bg-blue-600 rounded-lg py-2 px-4 cursor-pointer" onClick={() => setModalType(null)}>Cancel</button>
                         </div>
                     </Modal>
                 )}
