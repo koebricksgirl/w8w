@@ -96,7 +96,7 @@ async function main() {
                                 console.log(`Executing node ${nodeId} (${node.type})`);
 
                                 try {
-                                    const result = await runNode(node, context);
+                                    const result = await runNode(node, context, workflowId);
                                     context.$node[nodeId] = result;
 
                                     tasksDone++;

@@ -3,6 +3,7 @@ import { AgentExecutor, createToolCallingAgent } from "langchain/agents";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { tools } from "./tools/tools";
 import prisma from "@w8w/db";
+import { addMemory, getMemory } from "../../utils/memory";
 
 function resolveTemplate(template: string, context: Record<string, any>): string {
   if (!template || typeof template !== 'string') {
@@ -16,9 +17,9 @@ function resolveTemplate(template: string, context: Record<string, any>): string
   });
 }
 
-export async function runGeminiNode(node: any, context: any) {
+export async function runGeminiNode(node: any, context: any, workflowId?: string) {
   try {
-    let { prompt } = node.config;
+    let { prompt,memory } = node.config;
     
     if (prompt && typeof prompt === 'string' && prompt.includes('{{')) {
       prompt = resolveTemplate(prompt, context);
@@ -49,6 +50,12 @@ export async function runGeminiNode(node: any, context: any) {
       temperature: 0.5
     });
 
+    let history: { role: "user" | "assistant"; content: string }[] = [];
+    if(memory && workflowId) {
+    history = await getMemory(workflowId);
+    }
+
+
     const promptTemplate = ChatPromptTemplate.fromMessages([
       [
         "system", 
@@ -64,6 +71,7 @@ export async function runGeminiNode(node: any, context: any) {
           You can generate content freely when tools aren't needed
         Choose the best approach based on what the user is asking for.`
       ],
+      ...history.map((h) => [h.role, h.content] as [string,string]),
       ["user", "{input}"],
       ["placeholder", "{agent_scratchpad}"],
     ]);
@@ -97,11 +105,18 @@ export async function runGeminiNode(node: any, context: any) {
    rawText = rawText.replace(/^```json\s*/i, "").replace(/```$/i, "").trim();
 
 
+   if(memory && workflowId) {
+    await addMemory(workflowId, "user", prompt);
+    await addMemory(workflowId, "assistant", rawText);
+   }
+
+
       try {
      const parsed = JSON.parse(rawText);
-        if (parsed && typeof parsed === "object" && ("subject" in parsed || "body" in parsed)) {
+        if (parsed && typeof parsed === "object") {
         return {
           text: parsed, 
+          query: String(prompt),
           intermediateSteps: result.intermediateSteps,
         };
       }
