@@ -20,9 +20,9 @@ type NodeConfigDialogProps = {
 
 export default function NodeConfigDialog({ node, credentials, onClose, onSave }: NodeConfigDialogProps) {
   const [credentialId, setCredentialId] = useState<string>(node.data.credentialsId || "");
-  const [config, setConfig] = useState<Record<string, string>>(() => {
+  const [config, setConfig] = useState<Record<string, any>>(() => {
     const defaultConfig: Record<string, string> = {};
-    
+
     switch (node.type) {
       case 'ResendEmail':
         defaultConfig.to = node.data.config?.to || '';
@@ -34,9 +34,10 @@ export default function NodeConfigDialog({ node, credentials, onClose, onSave }:
         break;
       case 'Gemini':
         defaultConfig.prompt = node.data.config?.prompt || '';
+        defaultConfig.memory = node.data.config?.memory ?? false;
         break;
     }
-    
+
     return defaultConfig;
   });
 
@@ -46,7 +47,7 @@ export default function NodeConfigDialog({ node, credentials, onClose, onSave }:
 
   const availableVariables = useMemo(() => {
     const variables: VariableOption[] = [];
-    
+
     if (workflow?.triggerType === 'Webhook') {
       variables.push({
         label: 'Webhook Body Data',
@@ -149,9 +150,8 @@ export default function NodeConfigDialog({ node, credentials, onClose, onSave }:
             <select
               value={credentialId}
               onChange={(e) => setCredentialId(e.target.value)}
-              className={`w-full border rounded p-2 ${
-                isDark ? 'bg-zinc-800 border-zinc-700 text-white' : 'bg-white border-zinc-200'
-              }`}
+              className={`w-full border rounded p-2 ${isDark ? 'bg-zinc-800 border-zinc-700 text-white' : 'bg-white border-zinc-200'
+                }`}
             >
               <option value="">Select Credential</option>
               {credentials.map((c) => (
@@ -161,8 +161,12 @@ export default function NodeConfigDialog({ node, credentials, onClose, onSave }:
           </div>
 
           {Object.entries(config).map(([key, value]) => {
-            const fieldInfo = getFieldInfo(key);
+              if (node.type === 'Gemini' && key === 'memory') {
+                return null; 
+              }
             
+            const fieldInfo = getFieldInfo(key);
+
             return (
               <div key={key}>
                 <label className="block mb-2 font-medium">{fieldInfo.label}</label>
@@ -171,9 +175,8 @@ export default function NodeConfigDialog({ node, credentials, onClose, onSave }:
                     <textarea
                       value={value}
                       onChange={(e) => setConfig({ ...config, [key]: e.target.value })}
-                      className={`w-full border rounded p-2 min-h-[100px] ${
-                        isDark ? 'bg-zinc-800 border-zinc-700 text-white' : 'bg-white border-zinc-200'
-                      }`}
+                      className={`w-full border rounded p-2 min-h-[100px] ${isDark ? 'bg-zinc-800 border-zinc-700 text-white' : 'bg-white border-zinc-200'
+                        }`}
                       placeholder={fieldInfo.placeholder}
                     />
                   ) : (
@@ -181,9 +184,8 @@ export default function NodeConfigDialog({ node, credentials, onClose, onSave }:
                       type="text"
                       value={value}
                       onChange={(e) => setConfig({ ...config, [key]: e.target.value })}
-                      className={`w-full border rounded p-2 ${
-                        isDark ? 'bg-zinc-800 border-zinc-700 text-white' : 'bg-white border-zinc-200'
-                      }`}
+                      className={`w-full border rounded p-2 ${isDark ? 'bg-zinc-800 border-zinc-700 text-white' : 'bg-white border-zinc-200'
+                        }`}
                       placeholder={fieldInfo.placeholder}
                     />
                   )}
@@ -200,9 +202,8 @@ export default function NodeConfigDialog({ node, credentials, onClose, onSave }:
                         setConfig({ ...config, [key]: newValue });
                         e.target.value = '';
                       }}
-                      className={`w-full border rounded p-2 ${
-                        isDark ? 'bg-zinc-800 border-zinc-700 text-white' : 'bg-white border-zinc-200'
-                      }`}
+                      className={`w-full border rounded p-2 ${isDark ? 'bg-zinc-800 border-zinc-700 text-white' : 'bg-white border-zinc-200'
+                        }`}
                     >
                       <option value="">Insert variable...</option>
                       {availableVariables.map((v) => (
@@ -217,11 +218,26 @@ export default function NodeConfigDialog({ node, credentials, onClose, onSave }:
             );
           })}
 
+          {node.type === 'Gemini' && (
+            <div>
+              <label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={config.memory === true}
+                  onChange={(e) => setConfig({ ...config, memory: e.target.checked })}
+                />
+                Enable Memory
+              </label>
+              <p className="text-sm text-zinc-500">
+                If enabled, Gemini will recall the last 25 exchanges for this workflow.
+              </p>
+            </div>
+          )}
+
           <div className="flex justify-end gap-2 mt-6">
             <DialogClose asChild>
-              <button className={`px-4 py-2 rounded ${
-                isDark ? 'bg-zinc-800 hover:bg-zinc-700' : 'bg-zinc-100 hover:bg-zinc-200'
-              }`}>
+              <button className={`px-4 py-2 rounded ${isDark ? 'bg-zinc-800 hover:bg-zinc-700' : 'bg-zinc-100 hover:bg-zinc-200'
+                }`}>
                 Cancel
               </button>
             </DialogClose>
