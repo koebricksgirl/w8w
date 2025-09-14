@@ -8,6 +8,12 @@ export async function enqueueExecution(executionId: string, workflowId: string, 
             executionId,
             workflowId,
             payload: JSON.stringify(payload)
+        }, {
+            TRIM: {
+                strategy: 'MAXLEN',
+                strategyModifier: '~',
+                threshold: 10000
+            }
         })
 
         console.log("Execution queued:", executionId);
