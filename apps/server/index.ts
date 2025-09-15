@@ -3,7 +3,7 @@ import type { Request, Response, Application } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
-import { PORT,NODE_ENV } from "./config";
+import { PORT,NODE_ENV, FRONTEND_URL } from "./config";
 import allRoutes from "./routes/router"
 import webHookRouter from "./routes/webhook"
 import prisma from "@w8w/db";
@@ -15,7 +15,7 @@ const app: Application = express();
 app.use(express.json());
 
 const corsOptions={
-  origin: NODE_ENV === 'dev'?'http://localhost:5173':'https://w8w.rudrasankha.com',
+  origin: NODE_ENV === 'dev'?'http://localhost:5173': FRONTEND_URL,
   method:['GET','POST','PUT','DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials:true
