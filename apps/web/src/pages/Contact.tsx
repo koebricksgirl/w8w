@@ -1,6 +1,7 @@
 import { EnvelopeClosedIcon, ChatBubbleIcon, GitHubLogoIcon } from "@radix-ui/react-icons";
 
 import { useThemeStore } from "../store/useThemeStore";
+import { social } from "../utils/social";
 
 export default function Contact() {
   const { theme } = useThemeStore();
@@ -29,7 +30,7 @@ export default function Contact() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16">
             <a 
-              href="mailto:hello@example.com"
+              href="mailto:rsankhasi@gmail.com"
               className={`p-6 rounded-lg border ${
                 isDark ? 'border-zinc-800' : 'border-zinc-200'
               } ${isDark ? 'hover:bg-zinc-800 bg-zinc-900' : 'hover:bg-zinc-100/40 bg-white'} transition-all text-left group`}
@@ -48,7 +49,7 @@ export default function Contact() {
             </a>
 
             <a 
-              href="https://github.com/yourusername"
+              href={social.github}
               target="_blank"
               rel="noopener noreferrer"
               className={`p-6 rounded-lg border ${

@@ -2,6 +2,7 @@ import { GitHubLogoIcon, LinkedInLogoIcon, TwitterLogoIcon } from "@radix-ui/rea
 import { Link } from "react-router-dom";
 import { useThemeStore } from "../store/useThemeStore";
 import Logo from "./ui/Logo";
+import { social } from "../utils/social";
 
 export default function Footer() {
   const { theme } = useThemeStore();
@@ -123,7 +124,7 @@ export default function Footer() {
           </p>
           <div className="flex items-center gap-4">
             <a
-              href="https://twitter.com"
+              href={social.twitter}
               target="_blank"
               rel="noopener noreferrer"
               className={`p-2 rounded-lg ${isDark
@@ -135,7 +136,7 @@ export default function Footer() {
                 }`} />
             </a>
             <a
-              href="https://github.com"
+              href={social.github}
               target="_blank"
               rel="noopener noreferrer"
               className={`p-2 rounded-lg ${isDark
@@ -147,7 +148,7 @@ export default function Footer() {
                 }`} />
             </a>
             <a
-              href="https://linkedin.com"
+              href={social.linkedIn}
               target="_blank"
               rel="noopener noreferrer"
               className={`p-2 rounded-lg ${isDark
