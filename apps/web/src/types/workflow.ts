@@ -84,6 +84,14 @@ export interface FlowNodeData {
   credentialsId?: string | null;
 }
 
+export type WorkflowEvent =
+  | { type: "execution_started"; executionId: string; workflowId: string; totalTasks: number }
+  | { type: "execution_finished"; executionId: string; workflowId: string; status: string; tasksDone: number; totalTasks: number}
+  | { type: "node_started"; executionId: string; workflowId: string; nodeId: string; nodeType: string }
+  | { type: "node_succeeded"; executionId: string; workflowId: string; nodeId: string; nodeType: string }
+  | { type: "node_failed"; executionId: string; workflowId: string; nodeId: string; nodeType: string; error: string };
+
+
 export const flowToWorkflowNodes = (nodes: Node<FlowNodeData>[]): Record<string, WorkflowNode> => {
   return nodes.reduce((acc, node) => {
     if (!node.data) return acc;
@@ -144,3 +152,4 @@ export const workflowToFlowEdges = (workflow: Workflow | null | undefined): Edge
     }))
   );
 };
+

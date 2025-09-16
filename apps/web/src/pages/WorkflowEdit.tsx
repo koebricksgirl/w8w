@@ -19,6 +19,7 @@ import { useState, useCallback } from "react";
 import NodeConfigDialog from "../components/nodes/NodeConfigDialog";
 import { nodeIcons } from "../lib/nodeIcons";
 import { workflows, BACKEND_URL } from "../lib/api";
+import { useWorkflowEvents } from "../hooks/useWorkflowEvents";
 
 import "@xyflow/react/dist/style.css";
 
@@ -30,6 +31,8 @@ function WorkflowEditContent() {
 
     const { nodes, edges, onNodesChange, onEdgesChange, onConnect, saveWorkflow, isLoading, workflow } =
         useWorkflowEditor(id);
+
+    const {  nodeStatuses } = useWorkflowEvents(id!);
 
     const { data, isLoading: isLoadingCredentials } = useCredentials();
     const credentials = data?.credentials ?? [];
@@ -84,7 +87,7 @@ function WorkflowEditContent() {
     const runWorkflow = async () => {
         if (!id) return;
         try {
-             await workflows.run({ workflowId: id });
+            await workflows.run({ workflowId: id });
             alert(`Workflow execution started!`);
         } catch (error) {
             console.error("Error running workflow:", error);
@@ -274,7 +277,13 @@ function WorkflowEditContent() {
 
             <div className="flex-1 relative">
                 <ReactFlow
-                    nodes={nodes}
+                    nodes={nodes.map((n) => ({
+                        ...n,
+                        data: {
+                            ...n.data,
+                            status: nodeStatuses[n.id] ?? "idle",
+                        },
+                    }))}
                     edges={edges}
                     onNodesChange={onNodesChange}
                     onEdgesChange={onEdgesChange}

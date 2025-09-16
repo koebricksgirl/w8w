@@ -3,9 +3,10 @@ import { Handle, Position } from '@xyflow/react';
 import { useThemeStore } from '../../store/useThemeStore';
 import type { FlowNodeData } from '../../types/workflow';
 import { nodeIcons } from '../../lib/nodeIcons';
+import type { NodeStatus } from '../../types/node';
 
 type CustomNodeProps = {
-  data: FlowNodeData;
+  data: FlowNodeData & { status?: NodeStatus };
   selected?: boolean;
 };
 
@@ -19,6 +20,25 @@ const BaseNode = ({ data }: CustomNodeProps) => {
 Type: ${data.type}
 Use in config as: {{ $node.${data.id} }}
 ${data.type === 'Gemini' ? '\nOutput: {{ $node.' + data.id + '.text }}' : ''}`;
+
+  let execDotColor = 'bg-zinc-400';
+  let execDotLabel = 'Idle (not running)';
+  if (data.status === 'running') {
+    execDotColor = 'bg-yellow-500';
+    execDotLabel = 'Running';
+  }
+  if (data.status === 'success') {
+    execDotColor = 'bg-green-500';
+    execDotLabel = 'Succeeded';
+  }
+  if (data.status === 'failed') {
+    execDotColor = 'bg-red-500';
+    execDotLabel = 'Failed';
+  }
+
+    const credsReady = !!data.credentialsId;
+  const credsDotColor = credsReady ? 'bg-green-500' : 'bg-yellow-500';
+  const credsDotLabel = credsReady ? 'Credentials ready' : 'Missing credentials';
 
   return (
     <div
@@ -38,12 +58,18 @@ ${data.type === 'Gemini' ? '\nOutput: {{ $node.' + data.id + '.text }}' : ''}`;
       `}>
         {tooltipContent}
       </div>
+
       <div className="flex items-center justify-center relative">
-        <div className={`absolute -top-1 -right-1 w-3 h-3 rounded-full ${
-          data.credentialsId 
-            ? 'bg-green-500' 
-            : 'bg-yellow-500'
-        }`} />
+         <div className={`absolute top-5 -right-3 w-2 h-2 rounded-full ${execDotColor}`}
+          title={`Execution status: ${execDotLabel}`}
+         >
+
+           <div className={`w-2 h-2 rounded-full ${execDotColor}`} />
+         </div>
+
+        <div className={`absolute -top-1 -right-1 w-3 h-3 rounded-full ${credsDotColor}`} 
+         title={`Credentials: ${credsDotLabel}`}
+        />
         <div className="relative">
           <img 
             src={nodeIcons[data.type]} 

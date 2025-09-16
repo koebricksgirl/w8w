@@ -1,0 +1,1 @@
+export type NodeStatus = "idle" | "running" | "success" | "failed";
