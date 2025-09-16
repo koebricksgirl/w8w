@@ -17,5 +17,9 @@ export const config = {
     },
     frontend: {
         url: process.env.FRONTEND_URL || "http://localhost:5173"
+    },
+    wsServer: {
+        port: process.env.WS_PORT || 8082,
+        url : process.env.WS_URL || "ws://localhost:8082"
     }
 }
