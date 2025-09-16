@@ -1,6 +1,7 @@
 import prisma from "@w8w/db";
 import { redis } from "@w8w/shared";
 import { runNode } from "./nodes/runner/runner";
+import { publishEvent } from "./publish";
 
 type XReadMessage = {
     id: string;
@@ -46,6 +47,7 @@ async function main() {
 
                             if (!workflow) {
                                 console.error("Workflow not found:", workflowId);
+                                await redis.xAck("workflow:executions", GROUP, message.id);
                                 continue;
                             }
 
@@ -53,16 +55,22 @@ async function main() {
                                 where: { id: executionId },
                             });
 
+                            if (!execution) {
+                                console.error("Execution not found:", workflowId);
+                                await redis.xAck("workflow:executions", GROUP, message.id);
+                                continue;
+                            }
 
                             const triggerPayload =
                                 (execution?.output as any)?.triggerPayload ?? {};
-
 
 
                             await prisma.execution.update({
                                 where: { id: executionId },
                                 data: { status: "RUNNING" },
                             });
+
+                            await publishEvent(workflowId!, { type: "execution_started", executionId, workflowId, totalTasks: execution?.totalTasks ?? 0 });
 
                             const nodes = workflow.nodes as Record<string, any>;
                             const connections = workflow.connections as Record<string, string[]>;
@@ -89,9 +97,14 @@ async function main() {
                                 (n) => indegree[n] === 0
                             );
 
+                            let executionFailed = false;
+
                             while (queue.length > 0) {
                                 const nodeId = queue.shift()!;
                                 const node = nodes[nodeId];
+
+                                await publishEvent(workflowId!, { type: "node_started", executionId, workflowId, nodeId, nodeType: node.type });
+
 
                                 console.log(`Executing node ${nodeId} (${node.type})`);
 
@@ -109,6 +122,15 @@ async function main() {
                                         },
                                     });
 
+
+                                    await publishEvent(workflowId!, {
+                                        type: "node_succeeded",
+                                        executionId,
+                                        workflowId,
+                                        nodeId,
+                                        nodeType: node.type
+                                    });
+                                    
                                     const nextNodes = connections[nodeId] || [];
                                     nextNodes.forEach((n) => {
                                         console.log(`→ Next: ${n}`);
@@ -120,6 +142,7 @@ async function main() {
 
                                 } catch (err: any) {
                                     console.error(`Error in node ${nodeId}:`, err.message);
+                                    const msg = err.message;
 
                                     await prisma.execution.update({
                                         where: { id: executionId },
@@ -131,14 +154,46 @@ async function main() {
                                             },
                                         },
                                     });
-                                    return;
+
+                                    await publishEvent(workflowId!, {
+                                        type: "node_failed",
+                                        executionId,
+                                        workflowId,
+                                        nodeId,
+                                        nodeType: node.type,
+                                        error: msg
+                                    });
+
+                                    executionFailed = true;
+                                    break;
                                 }
                             }
 
-                            await prisma.execution.update({
-                                where: { id: executionId },
-                                data: { status: "SUCCESS", tasksDone },
-                            });
+
+                            if (executionFailed) {
+                                await publishEvent(workflowId!, {
+                                    type: "execution_finished",
+                                    executionId,
+                                    workflowId,
+                                    status: "FAILED",
+                                    tasksDone
+                                });
+
+                            } else {
+                                await prisma.execution.update({
+                                    where: { id: executionId },
+                                    data: { status: "SUCCESS", tasksDone },
+                                });
+
+                                await publishEvent(workflowId!, {
+                                    type: "execution_finished",
+                                    executionId,
+                                    workflowId,
+                                    status: "SUCCESS",
+                                    tasksDone,
+                                });
+                            }
+
 
                             console.log("Execution finished:", executionId);
 
