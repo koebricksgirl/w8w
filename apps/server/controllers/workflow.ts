@@ -55,18 +55,9 @@ export const createWorkFlow = async (req: AuthRequest, res: Response) => {
 
     const totalTasks = Object.keys(newWorkflow.nodes).length;
 
-
-    const execution = await prisma.execution.create({
-      data: {
-        workflowId: workflow.id,
-        totalTasks
-      }
-    })
-
     res.status(200).json({
       message: "Workflow Posted successfully",
-      workflow,
-      execution
+      workflow
     })
     return
   } catch (error: any) {
