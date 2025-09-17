@@ -13,7 +13,8 @@ It lets you connect triggers (like webhooks) to actions (like Gemini, ResendEmai
 - **Credential Management:** Securely store and manage API keys and credentials.
 - **Execution History:** Track workflow runs and view logs.
 - **Dark/Light Theme:** Modern, responsive UI with theme support.
-- **Built with Bun, React, TypeScript, Prisma, Zod, TanStack Query, Zustand, and Express.**
+- **Real-Time Execution Viewer:** Track workflow execution live with WebSockets and Redis Pub/Sub.
+- **Built with Bun, React, TypeScript, Prisma, Zod, TanStack Query, Zustand,Express,Redis,Websockets**
 
 ---
 
@@ -28,7 +29,10 @@ It lets you connect triggers (like webhooks) to actions (like Gemini, ResendEmai
 - [Prisma](https://www.prisma.io/) - ORM
 - [Zod](https://zod.dev/) - Schema validation
 - [Express](https://expressjs.com/) - Backend API
-- [Redis Streams](https://redis.io/docs/data-types/streams/) - Server-to-worker workflow queue
+- [Redis Streams](https://redis.io/docs/latest/develop/data-types/streams/) - Server-to-worker workflow queue
+- [WebSockets](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API) - Real-time client updates
+- [Redis Pub/Sub](https://redis.io/docs/latest/develop/pubsub/) - Live workflow event propagation
+
 
 ---
 
@@ -54,6 +58,8 @@ packages/
 - **Run Workflows:** Trigger manually or via webhook.
 - **View Executions:** See past runs and debug with logs.
 - **Distributed Execution:** Workflows are queued via Redis Streams and processed by workers for scalability and reliability.
+- **Live Monitoring:** Watch nodes start, succeed, or fail in real time as workflows run.
+
 
 ---
 

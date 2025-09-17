@@ -40,6 +40,7 @@ wss.on("connection", async (ws) => {
     console.log("Client disconnected");
     if (sub && subscribedChannel) {
       await sub.unsubscribe(subscribedChannel);
+      await sub.disconnect();
       console.log(`Unsubscribed from ${subscribedChannel}`);
     }
   });
