@@ -18,6 +18,7 @@ import Register from "./pages/Register";
 import NotFound from "./components/notfound/Notfound";
 import Docs from "./pages/docs/Docs";
 import DocDetail from "./pages/docs/DocDetail";
+import ScrollToTop from "./components/ui/ScrolltoTop";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuthStore();
@@ -36,6 +37,7 @@ export default function App() {
           }`}>
           <Navbar />
           <main className="flex-1 mt-20">
+          <ScrollToTop />
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/about" element={<About />} />
