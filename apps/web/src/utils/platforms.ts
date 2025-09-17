@@ -1,4 +1,4 @@
-import type { Platform } from "@w8w/db";
+import type { Platform } from "../types/platform";
 
  export const PLATFORM_OPTIONS: Platform[] = ["Telegram", "Gemini", "ResendEmail"] as Platform[];
 

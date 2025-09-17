@@ -1,4 +1,4 @@
-import { Platform } from '@w8w/db';
+import { Platform } from '../../types/platform';
 import BaseNode from './BaseNode';
 
 const nodeTypes = {

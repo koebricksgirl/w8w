@@ -10,7 +10,7 @@ import {
   ReactFlowProvider,
 } from "@xyflow/react";
 import type { FlowNodeData, WorkflowCredential } from '../types/workflow';
-import { Platform } from '@w8w/db/types';
+import { Platform } from '../types/platform';
 import { useThemeStore } from "../store/useThemeStore";
 import { nodeTypes } from "../components/nodes/nodeTypes";
 import { useWorkflowEditor } from "../hooks/useWorkflowEditor";

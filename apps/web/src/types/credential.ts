@@ -1,4 +1,4 @@
-import type { Platform } from "@w8w/db";
+import type { Platform } from "../types/platform";
 
 export interface Credential {
   id?: string;

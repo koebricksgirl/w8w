@@ -1,4 +1,4 @@
-import { Platform } from '@w8w/db';
+import { Platform } from '../types/platform';
 import type { Node, Edge } from '@xyflow/react';
 
 type Methods = 'GET' | 'POST' | 'PUT' | 'DELETE';

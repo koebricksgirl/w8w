@@ -14,6 +14,8 @@ import WorkflowEditor from "./pages/WorkflowEditor";
 import WorkflowEdit from "./pages/WorkflowEdit";
 import './styles/reactflow.css';
 import Credentials from "./pages/Credentials/Credentials";
+import Register from "./pages/Register";
+import NotFound from "./components/notfound/Notfound";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuthStore();
@@ -22,47 +24,48 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   const { theme } = useThemeStore();
-  
+
   return (
     <ErrorBoundary>
-    <ThemeProvider>
-    <div className={`min-h-screen flex flex-col ${
-      theme === 'dark' 
-        ? 'bg-zinc-900 text-white' 
-        : 'bg-white text-zinc-900'
-    }`}>
-      <Navbar />
-      <main className="flex-1">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          } />
-          <Route path="/workflows/editor" element={
-            <ProtectedRoute>
-              <WorkflowEditor />
-            </ProtectedRoute>
-          } />
-          <Route path="/workflows/editor/:id" element={
-            <ProtectedRoute>
-              <WorkflowEdit />
-            </ProtectedRoute>
-          } />
-             <Route path="/credentials" element={
-            <ProtectedRoute>
-              <Credentials />
-            </ProtectedRoute>
-          } />
-        </Routes>
-      </main>
-      <Footer />
-    </div>
-    </ThemeProvider>
+      <ThemeProvider>
+        <div className={`min-h-screen flex flex-col ${theme === 'dark'
+            ? 'bg-zinc-900 text-white'
+            : 'bg-white text-zinc-900'
+          }`}>
+          <Navbar />
+          <main className="flex-1">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/dashboard" element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/workflows/editor" element={
+                <ProtectedRoute>
+                  <WorkflowEditor />
+                </ProtectedRoute>
+              } />
+              <Route path="/workflows/editor/:id" element={
+                <ProtectedRoute>
+                  <WorkflowEdit />
+                </ProtectedRoute>
+              } />
+              <Route path="/credentials" element={
+                <ProtectedRoute>
+                  <Credentials />
+                </ProtectedRoute>
+              } />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      </ThemeProvider>
     </ErrorBoundary>
   );
 }

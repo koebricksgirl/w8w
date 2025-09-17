@@ -7,7 +7,7 @@ import type { WorkflowCredential } from "../../types/workflow";
 import { CredentialViewBody } from "./CredentialViewBody";
 import { CredentialEditBody } from "./CredentialEditBody";
 import { Modal } from "./Modal";
-import type { Platform } from "@w8w/db";
+import type { Platform } from "../../types/platform";
 
 
 export default function Credentials() {

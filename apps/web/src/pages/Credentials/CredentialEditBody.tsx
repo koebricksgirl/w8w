@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { Platform } from "@w8w/db";
+import type { Platform } from "../../types/platform";
 import { PLATFORM_FIELDS, PLATFORM_OPTIONS } from "../../utils/platforms";
 import type { Credential } from "../../types/credential";
 
