@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useThemeStore } from "../../../store/useThemeStore";
 import { nodeIcons } from "../../../lib/nodeIcons";
+import { CopyBox } from "../../../components/CopyBox";
 
 export default function WorkflowExamples() {
   const { theme } = useThemeStore();
@@ -15,7 +16,7 @@ export default function WorkflowExamples() {
     <div className={`max-w-6xl mx-auto px-6 py-10 ${isDark ? "text-zinc-200" : "text-zinc-900"}`}>
       <h1 className="text-3xl font-bold mb-6">Workflow Editor — Guide & Examples</h1>
 
-   
+
       <section className={`rounded-xl p-6 mb-8 shadow-sm ${cardBg}`}>
         <h2 className="text-2xl font-semibold mb-3">Getting started — quick steps</h2>
         <ol className="list-decimal pl-6 space-y-2 leading-relaxed">
@@ -96,7 +97,7 @@ export default function WorkflowExamples() {
         </div>
       </section>
 
-  
+
       <section className={`rounded-xl p-6 mb-8 ${cardBg} border ${isDark ? "border-zinc-700" : "border-zinc-200"}`}>
         <h2 className="text-2xl font-semibold mb-3">Workflow types</h2>
         <ul className="list-disc pl-6 space-y-2">
@@ -117,7 +118,7 @@ export default function WorkflowExamples() {
       </section>
 
       <section className={`rounded-xl p-6 mb-8 ${subtleBg} border ${isDark ? "border-zinc-700" : "border-zinc-200"}`}>
-        <h2 className="text-2xl font-semibold mb-3">Detailed Example — Webhook → Gemini → Email → Telegram</h2>
+        <h2 className="text-2xl font-semibold mb-3">Detailed Example — 1) Webhook → Gemini → Email → Telegram</h2>
 
         <p className="mb-2">
           Below is a full example: webhook triggers the flow, Gemini generates content, ResendEmail sends the email, Telegram posts a notification.
@@ -126,7 +127,7 @@ export default function WorkflowExamples() {
         <div className="bg-zinc-900 text-white rounded p-3 text-sm mb-4 overflow-x-auto">
           <strong>Webhook Details</strong>
           <pre className="mt-2">
-{`Webhook URL: http://localhost:8000/webhooks/971511ec-82bb-47ca-a290-e80fd390dfd8
+            {`Webhook URL: http://localhost:8000/webhooks/971511ec-82bb-47ca-a290-e80fd390dfd8
 Secret: welcome123
 Method: POST`}
           </pre>
@@ -135,7 +136,7 @@ Method: POST`}
         <p className="mb-2"><strong>Example curl command</strong> (use this to trigger the webhook):</p>
         <div className="bg-zinc-900 text-white rounded p-3 text-sm mb-4 overflow-x-auto">
           <pre>
-{`curl -X POST \\
+            {`curl -X POST \\
   http://localhost:8000/webhooks/971511ec-82bb-47ca-a290-e80fd390dfd8 \\
   -H "Content-Type: application/json" \\
   -H "Authorization: welcome123" \\
@@ -149,7 +150,7 @@ Method: POST`}
           <li>
             <strong>Gemini (node1)</strong> — select Gemini credential, then set the prompt. Example prompt:
             <div className="rounded p-2 mt-2 mb-2 bg-white/5 text-sm">
-{`Write a personalized welcome email for {{ $json.body.name }}. They are interested in {{ $json.body.interest }} and enjoy {{ $json.body.hobbies }}. The email should be warm and based on this prompt: {{ $json.body.prompt }}. Return a JSON object with fields: subject, body.`}
+              <CopyBox className="mt-2"  text="Write a personalized welcome email for {{ $json.body.name }}. They are interested in {{ $json.body.interest }} and enjoy {{ $json.body.hobbies }}. The email should be warm and based on this prompt: {{ $json.body.prompt }}. Return a JSON object with fields: subject, body." />
             </div>
             <p className={textMuted}>
               Note: <code>{"{{ $json.body.* }}"}</code> values come from the webhook body. When hitting the webhook (POST), include these fields in the JSON body or the workflow will lack input and may fail.
@@ -159,9 +160,9 @@ Method: POST`}
           <li>
             <strong>ResendEmail (node2)</strong> — choose Resend credentials, then map fields:
             <ul className="list-disc pl-6 mt-2">
-              <li>To: <code>{`{{ $json.body.email }}`}</code></li>
-              <li>Subject: <code>{`{{ $node.node1.text.subject }}`}</code></li>
-              <li>Body: <code>{`{{ $node.node1.text.body }}`}</code></li>
+              <li>To:  <CopyBox className="mt-2"  text="{{ $json.body.email }}" /></li>
+              <li>Subject: <CopyBox className="mt-2"  text="{{ $node.node1.text.subject }}" /> </li>
+              <li>Body: <CopyBox className="mt-2"  text="{{ $node.node1.text.body }}" /> </li>
             </ul>
             <p className={textMuted}>Here <code>{`$node.node1.text.subject`}</code> and <code>{`$node.node1.text.body`}</code> are values returned by Gemini (node1).</p>
           </li>
@@ -169,16 +170,16 @@ Method: POST`}
           <li>
             <strong>Telegram (node3)</strong> — choose Telegram credentials and set the message. Example message:
             <div className="rounded p-2 mt-2 mb-2 bg-white/5 text-sm">
-{`📩 Sent welcome email to {{ $json.body.name }} ({{ $json.body.email }})
+              <CopyBox className="mt-2"  text="Sent welcome email to {{ $json.body.name }} ({{ $json.body.email }})
 
-👤 Details:
+ Details:
 - Interest: {{ $json.body.interest }}
 - Hobbies: {{ $json.body.hobbies }}
 
-✉️ Email Subject: {{ $node.node1.text.subject }}
+ Email Subject: {{ $node.node1.text.subject }}
 
-📜 Email Body:
-{{ $node.node1.text.body }}`}
+Email Body:
+{{ $node.node1.text.body }}"/>
             </div>
           </li>
         </ol>
@@ -206,7 +207,7 @@ Method: POST`}
 
 
       <section className={`rounded-xl p-6 mb-8 ${cardBg} border ${isDark ? "border-zinc-700" : "border-zinc-200"}`}>
-        <h2 className="text-2xl font-semibold mb-3">Example — Manual Try Two Way1</h2>
+        <h2 className="text-2xl font-semibold mb-3">2) Example — Manual Try Two Way1</h2>
 
         <p className="mb-2">
           Workflow name: <strong>Manual Try Two Way1</strong> — Type: <strong>Manual</strong>
@@ -218,27 +219,27 @@ Method: POST`}
           <li>
             <strong>Node 1 — Telegram</strong>
             <div className="rounded p-2 mt-2 bg-white/5 text-sm">
-{`Message: Hello I am telegram`}
+              Message: <CopyBox className="mt-2"  text="Hello I am telegram" />
             </div>
           </li>
 
           <li>
             <strong>Node 2 — ResendEmail</strong>
             <div className="rounded p-2 mt-2 bg-white/5 text-sm">
-{`Credential: <select your credential>
-To: <yourmail>@gmail.com
-Subject: Hello Mail 1
-Body: Message : {{ $node.node1.message }}`}
+              Credential: {"<select your credential>"}
+              To: {"<yourmail>@gmail.com"}
+              Subject: <CopyBox  text="Hello Mail 1" className="mt-2" />
+              Body: <CopyBox text="{{ $node.node1.message }}" className="mt-2" />
             </div>
           </li>
 
           <li>
             <strong>Node 3 — ResendEmail (separate)</strong>
             <div className="rounded p-2 mt-2 bg-white/5 text-sm">
-{`Credential: <select your credential>
-To: <youremail>@gmail.com
-Subject: Hello mail2
-Body: Message: {{ $node.node1.message }}`}
+              Credential: {"<select your credential>"}
+              To: <CopyBox text="<youremail>@gmail.com" className="mt-2"  />
+              Subject: <CopyBox text="Hello mail2" className="mt-2"  />
+              Body: <CopyBox text="Message: {{ $node.node1.message }}" className="mt-2"  />
             </div>
             <p className={textMuted}>Note: Node3 is connected to node1, not node2.</p>
           </li>
@@ -246,10 +247,10 @@ Body: Message: {{ $node.node1.message }}`}
           <li>
             <strong>Node 4 — Telegram</strong>
             <div className="rounded p-2 mt-2 bg-white/5 text-sm">
-{`Message:
-Mail received from gmail 1: {{ $node.node2.body }}
+              Message:
+              <CopyBox className="mt-2"  text="Mail received from gmail 1: {{ $node.node2.body }}
 
-Mail received from gmail 2: {{ $node.node3.body }}`}
+Mail received from gmail 2: {{ $node.node3.body }}" />
             </div>
           </li>
         </ol>
@@ -259,47 +260,47 @@ Mail received from gmail 2: {{ $node.node3.body }}`}
         </div>
       </section>
 
-  
+
       <section className={`rounded-xl p-6 mb-8 ${subtleBg} border ${isDark ? "border-zinc-700" : "border-zinc-200"}`}>
         <h2 className="text-2xl font-semibold mb-3">Gemini → Telegram examples</h2>
 
-        <h3 className="text-lg font-semibold mb-2">1) Math example (manual)</h3>
+        <h3 className="text-lg font-semibold mb-2">3) Math example (manual)</h3>
         <div className="rounded p-3 mb-3 bg-white/5 text-sm">
-{`Gemini prompt:
-First calculate 3 + 4, then multiply the result by 2, then raise it to the power of 2. Return a json object with field ans.`}
+          Gemini prompt:
+          <CopyBox className="mt-2"  text="First calculate 3 + 4, then multiply the result by 2, then raise it to the power of 2. Return a json object with field ans" />
         </div>
         <div className="rounded p-2 bg-white/5 text-sm">
-{`Telegram message mapping:
-Query: {{ $node.node1.query }}
-Response: {{ $node.node1.text.ans }}`}
+          Telegram message :
+          Query: <CopyBox className="mt-2"  text="{{ $node.node1.query }}" />
+          Response: <CopyBox className="mt-2"  text="{{ $node.node1.text.ans }}" />
         </div>
 
-        <h3 className="text-lg font-semibold mt-4 mb-2">2) Story example (manual)</h3>
+        <h3 className="text-lg font-semibold mt-4 mb-2">4) Story example (manual)</h3>
         <div className="rounded p-3 mb-3 bg-white/5 text-sm">
-{`Gemini prompt:
-Generate a small story based on kids.`}
+          Gemini prompt:
+          <CopyBox className="mt-2"  text="Generate a small story based on kids" />
         </div>
         <div className="rounded p-2 bg-white/5 text-sm">
-{`Telegram message:
-Story: {{ $node.node1.text }}`}
+          Telegram message:
+          <CopyBox className="mt-2"  text="Story: {{ $node.node1.text }}" />
         </div>
       </section>
 
-     
+
       <section className={`rounded-xl p-6 mb-8 ${cardBg} border ${isDark ? "border-zinc-700" : "border-zinc-200"}`}>
-        <h2 className="text-2xl font-semibold mb-3">Webhook → Email → Telegram (signup alert)</h2>
+        <h2 className="text-2xl font-semibold mb-3">5) Webhook → Email → Telegram (signup alert)</h2>
         <p className="mb-2">Node mapping example:</p>
 
         <div className="rounded p-3 bg-white/5 text-sm mb-3">
-{`ResendEmail (node1)
-To: rssmp120@gmail.com
-Subject: New signup alert
-Body: New signup: {{ $json.body.email }}` }
+          ResendEmail (node1)
+          To: <CopyBox className="mt-2"  text="youremail@gmail.com" />
+          Subject: <CopyBox className="mt-2"  text="New signup alert" />
+          Body: <CopyBox className="mt-2"  text="New signup: {'{{ $json.body.email }} '}" />
         </div>
 
         <div className="rounded p-3 bg-white/5 text-sm">
-{`Telegram (node2)
-Message: Email sent to {{ $node.node1.to }}`}
+          "Telegram (node2)"
+          Message : <CopyBox className="mt-2"  text="Email sent to {{ $node.node1.to }}" />
         </div>
       </section>
 
@@ -311,12 +312,12 @@ Message: Email sent to {{ $node.node1.to }}`}
         </p>
 
         <div className="rounded p-3 bg-white/5 text-sm">
-{`Gemini configuration:
+          <CopyBox className="mt-2"  text={`Gemini configuration:
 Prompt: {{ $json.body.prompt }}
 Enable Memory: (toggle on) — Gemini will utilize up to last 25 conversations.
 
 Telegram:
-Message: Gemini Response: {{ $node.node1.text }}`}
+Message: Gemini Response: {{ $node.node1.text }}`} />
         </div>
 
         <div className="mt-4">
@@ -324,7 +325,7 @@ Message: Gemini Response: {{ $node.node1.text }}`}
         </div>
       </section>
 
-  
+
       <section className={`rounded-xl p-6 mb-8 ${cardBg} border ${isDark ? "border-zinc-700" : "border-zinc-200"}`}>
         <h2 className="text-2xl font-semibold mb-3">Troubleshooting & notes</h2>
 
@@ -342,7 +343,7 @@ Message: Gemini Response: {{ $node.node1.text }}`}
           <li>
             Call the bot updates endpoint:
             <div className="rounded p-2 mt-2 bg-white/5 text-sm overflow-x-auto">
-              <pre>{`https://api.telegram.org/bot<botToken>/getUpdates`}</pre>
+              <CopyBox className="mt-2"  text="https://api.telegram.org/bot<botToken>/getUpdates" />
             </div>
             The response contains an object with <code>chat</code> data — the <code>id</code> value is the chatId.
           </li>
@@ -368,18 +369,6 @@ Message: Gemini Response: {{ $node.node1.text }}`}
           <strong>Tip:</strong> when composing prompts or templates, test with a small webhook POST (or manual run) and inspect execution logs to confirm which exact field names appear in outputs — that helps determine whether to use <code>.text</code> or direct fields.
         </p>
       </section>
-
-      <footer className="text-sm text-zinc-500 mt-6">
-        <p>
-          That’s everything — full step-by-step instructions, examples, images, and variable mapping patterns.
-          If you want I can also:
-        </p>
-        <ul className="list-disc pl-6 mt-2 text-sm">
-          <li>Make the curl/example blocks copyable with your <code>CopyBox</code> component.</li>
-          <li>Turn example flows into downloadable JSON that can be imported into the canvas.</li>
-          <li>Add small interactive demos (mock API) for testing without a backend.</li>
-        </ul>
-      </footer>
     </div>
   );
 }

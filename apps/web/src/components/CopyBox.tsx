@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { CheckIcon, CopyIcon } from "@radix-ui/react-icons";
 
-export function CopyBox({ text,className }: { text: string,className:string }) {
+export function CopyBox({ text,className }: { text: string,className?:string }) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
