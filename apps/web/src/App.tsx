@@ -16,6 +16,8 @@ import './styles/reactflow.css';
 import Credentials from "./pages/Credentials/Credentials";
 import Register from "./pages/Register";
 import NotFound from "./components/notfound/Notfound";
+import Docs from "./pages/docs/Docs";
+import DocDetail from "./pages/docs/DocDetail";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuthStore();
@@ -29,11 +31,11 @@ export default function App() {
     <ErrorBoundary>
       <ThemeProvider>
         <div className={`min-h-screen flex flex-col ${theme === 'dark'
-            ? 'bg-zinc-900 text-white'
-            : 'bg-white text-zinc-900'
+          ? 'bg-zinc-900 text-white'
+          : 'bg-white text-zinc-900'
           }`}>
           <Navbar />
-          <main className="flex-1">
+          <main className="flex-1 mt-20">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/about" element={<About />} />
@@ -60,6 +62,8 @@ export default function App() {
                   <Credentials />
                 </ProtectedRoute>
               } />
+              <Route path="/docs" element={<Docs />} />
+              <Route path="/docs/:id" element={<DocDetail />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>

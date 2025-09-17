@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useThemeStore } from '../store/useThemeStore';
-import { PlusIcon, PlayIcon,TrashIcon, Pencil2Icon } from '@radix-ui/react-icons';
+import { PlusIcon, PlayIcon, TrashIcon, Pencil2Icon } from '@radix-ui/react-icons';
 import { renderWorkflowSequence } from '../utils/renderWorkflowSequence';
 import { nodeIcons } from '../lib/nodeIcons';
 import { useDeleteWorkflow, useWorkflows } from '../hooks/useWorkflows';
@@ -19,13 +19,18 @@ export default function Dashboard() {
   const deleteWorkflow = useDeleteWorkflow();
 
   return (
-    <div className="py-32 px-4">
+    <div className="pb-32 pt-6 px-4">
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <h1 className="flex items-center gap-3 text-3xl font-bold">
             <img src={nodeIcons.Workflow} alt="Workflow" className="w-8 h-8" />
             My Workflows
           </h1>
+          <p>
+            Go to this <span className="text-yellow-400 cursor-pointer" onClick={() => {
+              navigate(`/docs/1`)
+            }}>Workflows Docs</span> for knowing how create workflows and examples with all details
+          </p>
           <Link
             to="/workflows/editor"
             className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg ${isDark
@@ -87,7 +92,7 @@ export default function Dashboard() {
                     : 'hover:bg-zinc-100'
                     } transition-colors`}
                 >
-                  <Pencil2Icon className='h-5 w-5'/>
+                  <Pencil2Icon className='h-5 w-5' />
                 </Link>
                 <button className={`px-3 py-1 rounded text-sm ${isDark
                   ? 'hover:bg-white/10 text-red-400'
@@ -97,8 +102,8 @@ export default function Dashboard() {
                     setSelectedWorkflow(workflow);
                     setModalType("delete");
                   }}
-                  >
-                  <TrashIcon className='h-5 w-5'/>
+                >
+                  <TrashIcon className='h-5 w-5' />
                 </button>
               </div>
             </div>

@@ -120,7 +120,7 @@ function WorkflowEditContent() {
     }
 
     return (
-        <div className="flex flex-col md:flex-row h-screen pt-16">
+        <div className="flex flex-col md:flex-row h-screen">
             <aside className="w-full md:w-72 lg:w-80 border-r p-4 space-y-4 bg-white dark:bg-zinc-900 overflow-y-auto">
                 <div className="space-y-4">
                     <div className="flex items-center justify-between">

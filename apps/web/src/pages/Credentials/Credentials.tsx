@@ -8,6 +8,7 @@ import { CredentialViewBody } from "./CredentialViewBody";
 import { CredentialEditBody } from "./CredentialEditBody";
 import { Modal } from "./Modal";
 import type { Platform } from "../../types/platform";
+import { useNavigate } from "react-router-dom";
 
 
 export default function Credentials() {
@@ -17,6 +18,7 @@ export default function Credentials() {
     const createCredential = useCreateCredential();
     const updateCredential = useUpdateCredential();
     const deleteCredential = useDeleteCredential();
+    const navigate = useNavigate();
 
     const credentialsList = data?.credentials ?? [];
     const [selectedCredential, setSelectedCredential] = useState<WorkflowCredential | null>(null);
@@ -24,13 +26,18 @@ export default function Credentials() {
 
 
     return (
-        <div className="py-32 px-4">
+        <div className="pb-32 pt-12 px-4">
             <div className="max-w-7xl mx-auto">
                 <div className="md:flex justify-between items-center font-bold mb-6">
                     <h1 className="flex items-center gap-3 text-3xl font-bold">
                         My Credentials
                         <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" className="object-contain iconify iconify--fa-solid" width="1em" height="1em" viewBox="0 0 512 512"><path fill="currentColor" d="M512 176.001C512 273.203 433.202 352 336 352c-11.22 0-22.19-1.062-32.827-3.069l-24.012 27.014A24 24 0 0 1 261.223 384H224v40c0 13.255-10.745 24-24 24h-40v40c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24v-78.059c0-6.365 2.529-12.47 7.029-16.971l161.802-161.802C163.108 213.814 160 195.271 160 176C160 78.798 238.797.001 335.999 0C433.488-.001 512 78.511 512 176.001M336 128c0 26.51 21.49 48 48 48s48-21.49 48-48s-21.49-48-48-48s-48 21.49-48 48"></path></svg>
                     </h1>
+                    <p>
+                        Go to this <span className="text-yellow-400 cursor-pointer" onClick={() => {
+                            navigate(`/docs/2`)
+                        }}>Credential Docs</span> for knowing how to get credentials
+                    </p>
                     <button className={`rounded-lg items-center gap-2 mt-4 md:mt-0 inline-flex px-4 py-2 ${isDark
                         ? 'bg-blue-600 hover:bg-blue-700'
                         : 'bg-blue-500 hover:bg-blue-600'

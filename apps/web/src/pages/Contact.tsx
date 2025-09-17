@@ -9,7 +9,7 @@ export default function Contact() {
 
   return (
     <div className="min-h-screen">
-      <section className="flex flex-col items-center py-32 px-4">
+      <section className="flex flex-col items-center pb-32 pt-12 px-4">
         <div className="space-y-8 max-w-4xl mx-auto text-center">
           <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg border ${
             isDark ? 'border-zinc-800' : 'border-zinc-200'

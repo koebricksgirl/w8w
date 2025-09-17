@@ -10,7 +10,7 @@ export default function Home() {
   const isDark = theme === "dark";
   return (
     <div className="min-h-screen">
-      <section className="flex flex-col justify-center items-center py-32 text-center px-4">
+      <section className="flex flex-col justify-center items-center pb-32 pt-12 text-center px-4">
         <div className="space-y-8 flex flex-col justify-center items-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border mb-4">
             <LightningBoltIcon className="w-4 h-4" />
