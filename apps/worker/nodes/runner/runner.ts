@@ -1,4 +1,4 @@
-import { createOrUseForm } from "../form/createOrUseForm";
+import { useForm } from "../form/useForm";
 import { runGeminiNode } from "../gemini/gemini";
 import { sendEmail } from "../resend";
 import { sendTelegramMessage } from "../telegram";
@@ -16,7 +16,7 @@ export async function runNode(node:any,context: Record<string,any>,workflowId?:s
                 return runGeminiNode(node,context,workflowId);
 
             case "Form":
-                return createOrUseForm(node,workflowId);
+                return useForm(node,workflowId);
                 
             default:
                throw new Error(`Unknown node type: ${node.type}`);

@@ -1,6 +1,6 @@
 import prisma from "@w8w/db";
 
-export async function createOrUseForm(node: any, workflowId?: string) {
+export async function useForm(node: any, workflowId?: string) {
     if (!workflowId) throw new Error("workflowId required for form node");
     if (!node) throw new Error("Node required but no node provided");
 
