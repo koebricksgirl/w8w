@@ -14,4 +14,5 @@ import type { Platform } from "../types/platform";
     { key: "apiKey", label: "Resend API Key", required: true, placeholder: "Enter Resend API Key" },
     { key: "resendDomainMail", label: "Resend Domain Email", required: false, placeholder: "Enter Domain Email (optional)", pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ },
   ],
+  Form: []
 };
