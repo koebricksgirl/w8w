@@ -3,6 +3,7 @@ import { type AuthRequest } from "../middleware/auth";
 import { createWorkFlowSchema, updateWorkFlowSchema } from "@w8w/shared";
 import prisma from "@w8w/db";
 import { enqueueExecution } from "../redis/enqueue";
+import { validateFormFields } from "../utils/validation";
 
 export const createWorkFlow = async (req: AuthRequest, res: Response) => {
   try {
@@ -55,9 +56,36 @@ export const createWorkFlow = async (req: AuthRequest, res: Response) => {
 
     const totalTasks = Object.keys(newWorkflow.nodes).length;
 
+    const formNodes = Object.values(newWorkflow.nodes).filter(
+      (n: any) => n.type === "Form"
+    );
+
+    for (const node of formNodes) {
+      const errorMsg = validateFormFields(node.config.fields || []);
+      if (errorMsg) {
+        return res.status(400).json({ message: errorMsg });
+      }
+
+      await prisma.form.upsert({
+        where: { workflowId_nodeId: { workflowId: workflow.id, nodeId: node.id } },
+        update: {
+          title: node.config.title || "Form",
+          fields: node.config.fields || [],
+        },
+        create: {
+          workflowId: workflow.id,
+          nodeId: node.id,
+          title: node.config.title || "Form",
+          fields: node.config.fields || [],
+          userId,
+        },
+      });
+    }
+
     res.status(200).json({
       message: "Workflow Posted successfully",
-      workflow
+      workflow,
+      totalTasks
     })
     return
   } catch (error: any) {
@@ -74,6 +102,12 @@ export const updateWorkFlow = async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.userId!;
     const { workflowId } = req.params;
+
+    if (!workflowId) {
+      return res.status(400).json({
+        message: "No workflow id passed"
+      })
+    }
 
     const result = updateWorkFlowSchema.safeParse(req.body);
 
@@ -135,6 +169,33 @@ export const updateWorkFlow = async (req: AuthRequest, res: Response) => {
       }
     });
 
+    const formNodes = Object.values(updateWorkFlowData.nodes || {}).filter(
+      (n: any) => n.type === "Form"
+    );
+
+    for (const node of formNodes) {
+      const errorMsg = validateFormFields(node.config.fields || []);
+      if (errorMsg) {
+        return res.status(400).json({ message: errorMsg });
+      }
+
+      await prisma.form.upsert({
+        where: { workflowId_nodeId: { workflowId, nodeId: node.id } },
+        update: {
+          title: node.config.title || "Form",
+          fields: node.config.fields || [],
+        },
+        create: {
+          workflowId,
+          nodeId: node.id,
+          title: node.config.title || "Form",
+          fields: node.config.fields || [],
+          userId,
+        },
+      });
+    }
+
+
     res.status(200).json({
       message: "Workflow updated successfully",
       workflow: updatedWorkflow
@@ -195,7 +256,7 @@ export const getWorkflows = async (req: AuthRequest, res: Response) => {
 
     const workflows = await prisma.workflow.findMany({
       where: { userId },
-      include: { webhook: true }
+      include: { webhook: true, form: true }
     })
 
     res.status(200).json({
@@ -233,8 +294,9 @@ export const getWorkflowById = async (req: AuthRequest, res: Response) => {
         triggerType: true,
         webhook: true,
         webhookId: true,
-        userId: true
-      }
+        userId: true,
+        form: true
+      },
     })
 
 
@@ -295,7 +357,7 @@ export const runManualWorkflow = async (req: AuthRequest, res: Response) => {
       data: {
         workflowId,
         totalTasks,
-       output: { triggerPayload: {} },
+        output: { triggerPayload: {} },
       },
     });
 

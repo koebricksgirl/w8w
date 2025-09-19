@@ -6,7 +6,8 @@ import type {
   WorkflowCredential, 
   WorkflowCredentialInput,
   WorkflowExecution,
-  WorkflowRunInput 
+  WorkflowRunInput,
+  WorkflowForm 
 } from '../types/workflow';
 
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000/api/v1";
@@ -91,5 +92,30 @@ export const credentials = {
   },
   delete: async (credentialId: string): Promise<void> => {
     await api.delete(`/credentials/delete/${credentialId}`);
+  },
+};
+
+export const forms = {
+  get: async (formId: string, secret?: string): Promise<{ form: WorkflowForm }> => {
+    const response = await api.get(`/forms/${formId}`, {
+      params: secret ? { formSecret: secret } : {},
+    });
+    return response.data;
+  },
+  submit: async (formId: string, data: Record<string, any>) => {
+    const response = await api.post(`/forms/${formId}/submit`, data);
+    return response.data;
+  },
+  responses: async (formId: string) => {
+    const response = await api.get(`/forms/${formId}/responses`);
+    return response.data;
+  },
+  open: async (formId: string) => {
+    const response = await api.patch(`/forms/${formId}/open`);
+    return response.data;
+  },
+  close: async (formId: string) => {
+    const response = await api.patch(`/forms/${formId}/close`);
+    return response.data;
   },
 };

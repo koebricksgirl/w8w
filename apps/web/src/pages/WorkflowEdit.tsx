@@ -32,7 +32,7 @@ function WorkflowEditContent() {
     const { nodes, edges, onNodesChange, onEdgesChange, onConnect, saveWorkflow, isLoading, workflow } =
         useWorkflowEditor(id);
 
-    const {  nodeStatuses } = useWorkflowEvents(id!);
+    const { nodeStatuses } = useWorkflowEvents(id!);
 
     const { data, isLoading: isLoadingCredentials } = useCredentials();
     const credentials = data?.credentials ?? [];
@@ -42,7 +42,13 @@ function WorkflowEditContent() {
 
     const { setNodes } = useReactFlow();
 
-    const availablePlatforms = Array.from(new Set(credentials.map((c: WorkflowCredential) => c.platform)));
+    const availablePlatforms = Array.from(
+        new Set([
+            ...credentials.map((c: WorkflowCredential) => c.platform),
+            Platform.Form,
+        ])
+    );
+
 
     const getNextPosition = useCallback(() => {
         const offset = 150;
@@ -209,8 +215,11 @@ function WorkflowEditContent() {
                             >
                                 <option value="" className="hidden">Add a node...</option>
                                 {availablePlatforms.map((p) => {
+                                    const requiresCredentials = p !== Platform.Form;
                                     const hasCredentials = credentials.some(c => c.platform === p);
-                                    if (!hasCredentials) return null;
+
+                                    if (requiresCredentials && !hasCredentials) return null;
+
                                     return (
                                         <option key={p} value={p} className="flex items-center">
                                             {p}
@@ -227,8 +236,11 @@ function WorkflowEditContent() {
 
                         <div className="flex flex-wrap gap-2 mt-2">
                             {availablePlatforms.slice(0, 5).map((p) => {
+                                const requiresCredentials = p !== Platform.Form;
                                 const hasCredentials = credentials.some(c => c.platform === p);
-                                if (!hasCredentials) return null;
+
+                                if (requiresCredentials && !hasCredentials) return null;
+
                                 return (
                                     <button
                                         key={p}
@@ -307,6 +319,7 @@ function WorkflowEditContent() {
             {selectedNode && (
                 <NodeConfigDialog
                     node={selectedNode}
+                    workflow={workflow}
                     credentials={credentials.filter((c: WorkflowCredential) => c.platform === selectedNode.type)}
                     onClose={() => setSelectedNode(null)}
                     onSave={(data) => {

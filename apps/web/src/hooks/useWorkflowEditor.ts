@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import type { Edge, Connection, Node } from '@xyflow/react';
 import { useNodesState, useEdgesState, addEdge } from '@xyflow/react';
@@ -16,7 +16,13 @@ export function useWorkflowEditor(id?: string) {
     enabled: !!id,
   });
 
-  const workflow = data?.workflow;
+const workflow = useMemo(() => {
+  if (!data?.workflow) return null;
+  return {
+    ...data.workflow,
+    form: data.workflow.form || []
+  };
+}, [data?.workflow]);
 
   const createMutation = useMutation({
     mutationFn: (data: WorkflowInput) => workflows.create(data),
@@ -29,6 +35,7 @@ export function useWorkflowEditor(id?: string) {
 
   useEffect(() => {
     if (workflow) {
+      console.log("Workflow from API:", workflow); 
       const flowNodes = workflowToFlowNodes(workflow);
       const flowEdges = workflowToFlowEdges(workflow);
       setNodes(flowNodes);

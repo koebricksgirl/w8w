@@ -19,6 +19,20 @@ export interface WorkflowWebhook {
   secret?: string;
 }
 
+export interface WorkflowForm {
+  id: string;
+  nodeId: string;
+  title: string;
+  fields: any[]; 
+  userId: string;
+  workflowId: string;
+  isActive: boolean;
+  secret?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+
 export interface Workflow {
   id: string;
   title: string;
@@ -31,6 +45,8 @@ export interface Workflow {
   userId: string;
   createdAt: string;
   updatedAt: string;
+
+   form?: WorkflowForm[];
 }
 
 export interface WorkflowInput {
@@ -82,6 +98,7 @@ export interface FlowNodeData {
   type: Platform;
   config: Record<string, any>;
   credentialsId?: string | null;
+  workflowId?: string;
 }
 
 export type WorkflowEvent =

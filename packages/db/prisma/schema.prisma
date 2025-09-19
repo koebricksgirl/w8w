@@ -20,6 +20,7 @@ model User {
   password  String
   workflows Workflow[]
   apiKeys   Credentials[]
+  forms Form[]
 }
 
 model Workflow {
@@ -31,6 +32,7 @@ model Workflow {
   enabled     Boolean @default(true)
   nodes       Json
   connections Json
+  form        Form[] 
 
   webhook   Webhook? @relation(fields: [webhookId], references: [id], onDelete: Cascade)
   webhookId String?  @unique
@@ -68,9 +70,42 @@ model Execution {
   totalTasks Int?
   output     Json?
   logs       Json?
+  formResponse FormResponse?
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
 }
+
+model Form {
+  id String @id @default(uuid())
+  workflow Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  workflowId String
+  nodeId String
+  title String
+  fields Json
+  secret String?
+  isActive Boolean @default(true)
+  createdBy User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  responses FormResponse[]
+  @@unique([workflowId, nodeId])
+}
+
+model FormResponse {
+  id String @id @default(uuid())
+  form Form @relation(fields: [formId], references: [id], onDelete: Cascade)
+  formId String
+  data Json
+  ip String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  execution Execution? @relation(fields: [executionId], references: [id])
+  executionId String? @unique
+}
+
+
 
 enum Platform {
   Telegram

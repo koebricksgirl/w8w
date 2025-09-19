@@ -3,6 +3,7 @@ import { signin, signup, verify } from "../controllers/user";
 import { authMiddleware } from "../middleware/auth";
 import { deleteCredential, getCredentialById, getCredentials, postCredentials, updateCredential } from "../controllers/credentials";
 import { createWorkFlow, deleteWorkFlow, getWorkflowById, getWorkflows, runManualWorkflow, updateWorkFlow } from "../controllers/workflow";
+import { formClose, formOpen, getForm, getFormResponses, submitForm } from "../controllers/forms";
 
 const router = express.Router();
 
@@ -24,5 +25,11 @@ router.get("/workflows/get",authMiddleware, getWorkflows);
 router.get("/workflows/get/:workflowId",authMiddleware, getWorkflowById);
 router.put("/workflows/update/:workflowId",authMiddleware, updateWorkFlow);
 router.delete("/workflows/delete/:workflowId", authMiddleware, deleteWorkFlow);
+
+router.post("/forms/:formId/submit", submitForm);
+router.get("/forms/:formId", getForm);
+router.get("/forms/:formId/responses",authMiddleware,getFormResponses);
+router.patch("/forms/:formId/open", authMiddleware, formOpen);
+router.patch("/forms/:formId/close", authMiddleware, formClose);
 
 export default router ;

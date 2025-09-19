@@ -3,7 +3,8 @@ import { useState, useMemo } from "react";
 import { useThemeStore } from "../../store/useThemeStore";
 import { useWorkflowEditor } from "../../hooks/useWorkflowEditor";
 import type { Node } from '@xyflow/react';
-import type { FlowNodeData, WorkflowCredential } from '../../types/workflow';
+import type { FlowNodeData, Workflow, WorkflowCredential } from '../../types/workflow';
+import FormNodeConfig from "./FormNodeConfig";
 
 interface VariableOption {
   label: string;
@@ -14,12 +15,14 @@ interface VariableOption {
 type NodeConfigDialogProps = {
   node: Node<FlowNodeData>;
   credentials: WorkflowCredential[];
+  workflow: Workflow | null;
   onClose: () => void;
   onSave: (data: FlowNodeData) => void;
 };
 
-export default function NodeConfigDialog({ node, credentials, onClose, onSave }: NodeConfigDialogProps) {
+export default function NodeConfigDialog({ node, credentials, onClose, onSave, workflow }: NodeConfigDialogProps) {
   const [credentialId, setCredentialId] = useState<string>(node.data.credentialsId || "");
+
   const [config, setConfig] = useState<Record<string, any>>(() => {
     const defaultConfig: Record<string, string> = {};
 
@@ -36,6 +39,10 @@ export default function NodeConfigDialog({ node, credentials, onClose, onSave }:
         defaultConfig.prompt = node.data.config?.prompt || '';
         defaultConfig.memory = node.data.config?.memory ?? false;
         break;
+      case 'Form':
+        defaultConfig.title = node.data.config?.title || '',
+          defaultConfig.fields = node.data.config?.fields || []
+        break;
     }
 
     return defaultConfig;
@@ -43,7 +50,8 @@ export default function NodeConfigDialog({ node, credentials, onClose, onSave }:
 
   const { theme } = useThemeStore();
   const isDark = theme === 'dark';
-  const { nodes, edges, workflow } = useWorkflowEditor();
+  const { nodes, edges } = useWorkflowEditor(node.data.workflowId);
+
 
   const availableVariables = useMemo(() => {
     const variables: VariableOption[] = [];
@@ -128,6 +136,24 @@ export default function NodeConfigDialog({ node, credentials, onClose, onSave }:
           type: 'textarea',
           helper: 'Can include variables from webhook or connected nodes'
         };
+      case 'Form':
+        switch (key) {
+          case 'title':
+            return {
+              label: "Form Title",
+              placeholder: "Enter form title",
+              type: "text",
+              helper: "This will be shown at the top of the form"
+            };
+          case "fields":
+            return {
+              label: "fields",
+              placeholder: "Add Fields (JSON array)",
+              type: "textarea",
+              helper: 'Example: [{"label": "Name", "type": "text"}, {"label": "Email", "type": "email"}]'
+            }
+        }
+        break;
     }
     return {
       label: key,
@@ -137,35 +163,54 @@ export default function NodeConfigDialog({ node, credentials, onClose, onSave }:
     };
   };
 
+
+  const formEntry = workflow?.form?.find((f) => f.nodeId === node.id) || null;
+  console.log("Dialog node.id:", node.id, "workflow form:", workflow?.form);
+
+
   return (
     <Dialog open onOpenChange={onClose}>
-      <DialogContent className={`${isDark ? "bg-zinc-900" : "bg-white"} p-6 rounded-lg`}>
+      <DialogContent className={`${isDark ? "bg-zinc-900" : "bg-white"} p-6 rounded-lg max-h-[80vh] overflow-y-auto`}>
         <DialogTitle className="font-bold mb-4">
           Configure {node.type}
         </DialogTitle>
 
         <div className="space-y-4">
-          <div>
-            <label className="block mb-2">Credential</label>
-            <select
-              value={credentialId}
-              onChange={(e) => setCredentialId(e.target.value)}
-              className={`w-full border rounded p-2 ${isDark ? 'bg-zinc-800 border-zinc-700 text-white' : 'bg-white border-zinc-200'
-                }`}
-            >
-              <option value="">Select Credential</option>
-              {credentials.map((c) => (
-                <option key={c.id} value={c.id}>{c.title}</option>
-              ))}
-            </select>
-          </div>
+          {node.type !== "Form" && (
+            <div>
+              <label className="block mb-2">Credential</label>
+              <select
+                value={credentialId}
+                onChange={(e) => setCredentialId(e.target.value)}
+                className={`w-full border rounded p-2 ${isDark ? 'bg-zinc-800 border-zinc-700 text-white' : 'bg-white border-zinc-200'
+                  }`}
+              >
+                <option value="">Select Credential</option>
+                {credentials.map((c) => (
+                  <option key={c.id} value={c.id}>{c.title}</option>
+                ))}
+              </select>
+            </div>
+          )}
+
 
           {Object.entries(config).map(([key, value]) => {
-              if (node.type === 'Gemini' && key === 'memory') {
-                return null; 
-              }
-            
+            if (node.type === 'Gemini' && key === 'memory') {
+              return null;
+            }
+
             const fieldInfo = getFieldInfo(key);
+
+            if (node.type === "Form" && key === "fields") {
+              return (
+                <FormNodeConfig
+                  key={key}
+                  initialFields={config.fields || []}
+                  onSave={(fields) => setConfig({ ...config, fields })}
+                  formEntry={formEntry}
+                />
+              );
+            }
 
             return (
               <div key={key}>
@@ -218,6 +263,7 @@ export default function NodeConfigDialog({ node, credentials, onClose, onSave }:
             );
           })}
 
+
           {node.type === 'Gemini' && (
             <div>
               <label className="flex items-center gap-2">
@@ -241,12 +287,14 @@ export default function NodeConfigDialog({ node, credentials, onClose, onSave }:
                 Cancel
               </button>
             </DialogClose>
+
             <button
               onClick={() => onSave({ ...node.data, credentialsId: credentialId, config })}
               className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
             >
               Save
             </button>
+
           </div>
         </div>
       </DialogContent>

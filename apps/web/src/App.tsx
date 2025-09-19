@@ -19,6 +19,7 @@ import NotFound from "./components/notfound/Notfound";
 import Docs from "./pages/docs/Docs";
 import DocDetail from "./pages/docs/DocDetail";
 import ScrollToTop from "./components/ui/ScrolltoTop";
+import FormPage from "./pages/FormPage";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuthStore();
@@ -66,6 +67,7 @@ export default function App() {
               } />
               <Route path="/docs" element={<Docs />} />
               <Route path="/docs/:id" element={<DocDetail />} />
+              <Route path="/forms/:formId" element={<FormPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>

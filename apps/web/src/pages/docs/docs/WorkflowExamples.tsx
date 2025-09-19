@@ -369,6 +369,81 @@ Message: Gemini Response: {{ $node.node1.text }}`} />
           <strong>Tip:</strong> when composing prompts or templates, test with a small webhook POST (or manual run) and inspect execution logs to confirm which exact field names appear in outputs — that helps determine whether to use <code>.text</code> or direct fields.
         </p>
       </section>
+
+      <section className={`rounded-xl p-6 mb-8 ${subtleBg} border ${isDark ? "border-zinc-700" : "border-zinc-200"}`}>
+        <h2 className="text-2xl font-semibold mb-3">6) Example — Form → Gemini → Telegram</h2>
+
+        <p className="mb-2">
+          This example collects candidate details via a <strong>Form node</strong>, evaluates them with <strong>Gemini</strong>, 
+          and sends the evaluation to <strong>Telegram</strong>.
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <img src="https://pbs.twimg.com/media/G1PqB-RWwAA49bj?format=jpg&name=4096x4096" alt="form workflow" className="rounded shadow-md w-full" />
+          <img src="https://pbs.twimg.com/media/G1PqjzKWQAAzn-R?format=jpg&name=medium" alt="form submit page" className="rounded shadow-md w-full" />
+        </div>
+
+        <h3 className="text-lg font-semibold mb-2">Node setup walkthrough</h3>
+        <ol className="list-decimal pl-6 space-y-4">
+          <li>
+            <strong>Form (node1)</strong> — Configure fields (save twice: <em>Save Fields</em> then <em>Save Workflow</em>):
+            <ul className="list-disc pl-6 mt-2 space-y-1">
+              <li>Name → <CopyBox text="key: name | label: Name | type: text | required: true | placeholder: hello" /></li>
+              <li>Have Experience → <CopyBox text="key: haveExperience | label: Do you have experience? | type: select | required: true | options: Yes, No" /></li>
+              <li>Skills → <CopyBox text="key: skills | label: What are your skills? | type: text | required: true | placeholder: Python,java,aws etc" /></li>
+              <li>Years of Experience → <CopyBox text="key: yearsofexperience | label: How many years of experience? | type: number | required: true | placeholder: 0 years or 1 year or 10 year etc" /></li>
+              <li>Explanation → <CopyBox text="key: explanation | label: Explain your experience | type: textarea | required: true | placeholder: Explain your experience" /></li>
+              <li>Interests → <CopyBox text="key: interests | label: What are your interests | type: text | required: false | placeholder: Games" /></li>
+            </ul>
+          </li>
+
+          <li>
+            <strong>Gemini (node2)</strong> — Select Gemini credential, then add prompt:
+            <CopyBox className="mt-2" text={`We are hiring for a Software Engineer role.  
+Job Requirements:
+- Minimum 3 years of experience
+- Strong skills in Java, Python, and C++
+- Ability to explain past projects clearly
+
+Based on the candidate's response, decide if we should hire them:
+
+- Name: {{ $json.body.name }}
+- Has Experience: {{ $json.body.haveExperience }}
+- Years of Experience: {{ $json.body.yearsofexperience }}
+- Skills: {{ $json.body.skills }}
+- Explanation: {{ $json.body.explanation }}
+- Interests: {{ $json.body.interests }}`} />
+          </li>
+
+          <li>
+            <strong>Telegram (node3)</strong> — Choose Telegram credential, then set message:
+            <CopyBox className="mt-2" text={`AI Evaluation: {{ $node.node2.text }}
+
+Submitted Form Response:
+- Name: {{ $json.body.name }}
+- Has Experience: {{ $json.body.haveExperience }}
+- Years of Experience: {{ $json.body.yearsofexperience }}
+- Skills: {{ $json.body.skills }}
+- Explanation: {{ $json.body.explanation }}`} />
+          </li>
+        </ol>
+
+        <h3 className="text-lg font-semibold mt-6 mb-2">Accessing the Form</h3>
+        <p className="mb-2">
+          Once workflow is saved, scroll to the bottom of the Form sidebar to copy the <strong>Form URL</strong>.
+        </p>
+        <img src="https://pbs.twimg.com/media/G1Pq3VhXgAAmnFI?format=jpg&name=medium" alt="form url copy" className="rounded shadow-md w-full my-4" />
+
+        <h3 className="text-lg font-semibold mt-4 mb-2">Special Instructions</h3>
+        <ul className="list-disc pl-6 space-y-2">
+          <li><strong>Two-step save:</strong> You must click <em>Save Fields</em> inside the form node, then <em>Save Workflow</em> to persist changes.</li>
+          <li><strong>Workflow creation:</strong> The form is only created after the workflow itself is saved successfully.</li>
+          <li><strong>Updating forms:</strong> If you change fields later, you must save inside the form node and then save the workflow again.</li>
+          <li><strong>Validation:</strong> All fields marked required must be filled, otherwise submission will fail on both frontend and backend.</li>
+        </ul>
+      </section>
+
+
     </div>
   );
 }

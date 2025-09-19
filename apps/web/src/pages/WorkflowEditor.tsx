@@ -44,17 +44,23 @@ function WorkflowEditorContent() {
 
   const { setNodes } = useReactFlow();
 
-  const availablePlatforms = Array.from(new Set(credentials.map((c: WorkflowCredential) => c.platform)));
+  const availablePlatforms = Array.from(
+    new Set([
+      ...credentials.map((c: WorkflowCredential) => c.platform),
+      Platform.Form,
+    ])
+  );
+
 
   const getNextPosition = useCallback(() => {
     const offset = 150;
     const existingPositions = nodes.map(node => node.position);
     const basePosition = { x: 250, y: 150 };
-    
+
     let newPosition = { ...basePosition };
     while (existingPositions.some(pos => pos.x === newPosition.x && pos.y === newPosition.y)) {
       newPosition.x += offset;
-      if (newPosition.x > 800) { 
+      if (newPosition.x > 800) {
         newPosition.x = basePosition.x;
         newPosition.y += offset;
       }
@@ -66,19 +72,19 @@ function WorkflowEditorContent() {
     (platform: Platform) => {
       const nodeNumber = nodes.length + 1;
       const nodeId = `node${nodeNumber}`;
-      
+
       setNodes((nds) => [
         ...nds,
         {
           id: nodeId,
           type: platform,
           position: getNextPosition(),
-          data: { 
+          data: {
             id: nodeId,
-            label: `${platform} ${nodeNumber}`, 
-            credentialsId: null, 
+            label: `${platform} ${nodeNumber}`,
+            credentialsId: null,
             config: {},
-            type: platform 
+            type: platform
           },
         },
       ]);
@@ -100,25 +106,27 @@ function WorkflowEditorContent() {
         <div className="space-y-4">
           <h3 className="font-bold">Add Node</h3>
           <div className="relative">
-            <div className={`flex items-center gap-2 p-2 rounded border cursor-pointer ${
-              isDark 
-                ? 'bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700' 
-                : 'bg-white border-zinc-200 text-black hover:bg-zinc-50'
-            }`}>
+            <div className={`flex items-center gap-2 p-2 rounded border cursor-pointer ${isDark
+              ? 'bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700'
+              : 'bg-white border-zinc-200 text-black hover:bg-zinc-50'
+              }`}>
               <select
                 onChange={(e) => {
                   const platform = e.target.value as Platform;
                   if (platform) {
                     addNode(platform);
-                    e.target.value = ''; 
+                    e.target.value = '';
                   }
                 }}
                 className="w-full appearance-none bg-transparent cursor-pointer focus:outline-none"
               >
                 <option value="" className="hidden">Add a node...</option>
                 {availablePlatforms.map((p) => {
+                  const requiresCredentials = p !== Platform.Form;
                   const hasCredentials = credentials.some(c => c.platform === p);
-                  if (!hasCredentials) return null;
+
+                  if (requiresCredentials && !hasCredentials) return null;
+
                   return (
                     <option key={p} value={p} className="flex items-center">
                       {p}
@@ -132,40 +140,41 @@ function WorkflowEditorContent() {
                 </svg>
               </div>
             </div>
-            
-              <div className="flex flex-wrap gap-2 mt-2">
-                {availablePlatforms.slice(0, 5).map((p) => {
-                  const hasCredentials = credentials.some(c => c.platform === p);
-                  if (!hasCredentials) return null;
-                  return (
-                    <button
-                      key={p}
-                      onClick={() => addNode(p)}
-                      className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm ${
-                        isDark 
-                          ? 'bg-zinc-800 hover:bg-zinc-700' 
-                          : 'bg-zinc-100 hover:bg-zinc-200'
-                      }`}
-                      title={`Add ${p} node`}
-                    >
-                      <img src={nodeIcons[p]} alt={p} className="w-4 h-4" />
-                      <span>{p}</span>
-                    </button>
-                  );
-                })}
-                {availablePlatforms.length > 5 && (
+
+            <div className="flex flex-wrap gap-2 mt-2">
+              {availablePlatforms.slice(0, 5).map((p) => {
+                const requiresCredentials = p !== Platform.Form;
+                const hasCredentials = credentials.some(c => c.platform === p);
+
+                if (requiresCredentials && !hasCredentials) return null;
+
+                return (
                   <button
-                    className={`px-3 py-1.5 rounded-full text-sm ${
-                      isDark 
-                        ? 'bg-zinc-800 hover:bg-zinc-700' 
-                        : 'bg-zinc-100 hover:bg-zinc-200'
-                    }`}
-                    title="More platforms available"
+                    key={p}
+                    onClick={() => addNode(p)}
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm ${isDark
+                      ? 'bg-zinc-800 hover:bg-zinc-700'
+                      : 'bg-zinc-100 hover:bg-zinc-200'
+                      }`}
+                    title={`Add ${p} node`}
                   >
-                    +{availablePlatforms.length - 5} more
+                    <img src={nodeIcons[p]} alt={p} className="w-4 h-4" />
+                    <span>{p}</span>
                   </button>
-                )}
-              </div>
+                );
+              })}
+              {availablePlatforms.length > 5 && (
+                <button
+                  className={`px-3 py-1.5 rounded-full text-sm ${isDark
+                    ? 'bg-zinc-800 hover:bg-zinc-700'
+                    : 'bg-zinc-100 hover:bg-zinc-200'
+                    }`}
+                  title="More platforms available"
+                >
+                  +{availablePlatforms.length - 5} more
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
@@ -227,7 +236,7 @@ function WorkflowEditorContent() {
             }
             try {
               const response = await saveWorkflow(workflowTitle, triggerType, triggerType === "Webhook" ? webhookConfig : undefined);
-              
+
               const getWorkflowId = (res: any): string => {
                 if (res && typeof res === 'object') {
                   if ('workflow' in res && res.workflow && typeof res.workflow === 'object' && 'id' in res.workflow) {
@@ -278,6 +287,7 @@ function WorkflowEditorContent() {
 
       {selectedNode && (
         <NodeConfigDialog
+        workflow={null}
           node={selectedNode}
           credentials={credentials.filter((c: WorkflowCredential) => c.platform === selectedNode.type)}
           onClose={() => setSelectedNode(null)}
