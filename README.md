@@ -5,6 +5,11 @@ It lets you connect triggers (like webhooks) to actions (like Gemini, ResendEmai
 
 ---
 
+## Demo Video
+
+https://github.com/user-attachments/assets/cd6fda9f-75df-4f26-9df8-3962dcda86e6
+
+
 ## Architecture Diagram
 <img src="./docs//images/arc.png" alt="arc"/>
 
