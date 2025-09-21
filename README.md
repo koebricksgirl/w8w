@@ -1,9 +1,12 @@
 # W8W
 
 **W8W** is a powerful workflow automation platform for modern teams.  
-It lets you connect triggers (like webhooks) to actions (like Gemini, ResendEmail, Telegram, etc.) and automate tasks visually.
+It lets you connect triggers (like webhooks) to actions (like Gemini, ResendEmail, Telegram, w8w forms etc.) and automate tasks visually.
 
 ---
+
+## Architecture Diagram
+<img src="./docs//images/arc.png" alt="arc"/>
 
 ## Features
 
