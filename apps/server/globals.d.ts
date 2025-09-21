@@ -3,3 +3,5 @@ declare namespace Express {
        id?: string
     }
  }
+
+declare module "express-rate-limiter";
