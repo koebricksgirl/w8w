@@ -118,4 +118,8 @@ export const forms = {
     const response = await api.patch(`/forms/${formId}/close`);
     return response.data;
   },
+  updateSecret: async (formId: string, secret: string | null) => {
+    const response = await api.patch(`/forms/${formId}/secret`, { secret });
+    return response.data;
+  },
 };

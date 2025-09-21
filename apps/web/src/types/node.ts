@@ -14,6 +14,6 @@ export type Field = {
 export type FormNodeConfigProps = {
   initialFields: Field[];
   onSave: (fields: Field[]) => void;
-formEntry?: WorkflowForm | null;
+  formEntry?: WorkflowForm | null;
 };
 

@@ -3,7 +3,7 @@ import { signin, signup, verify } from "../controllers/user";
 import { authMiddleware } from "../middleware/auth";
 import { deleteCredential, getCredentialById, getCredentials, postCredentials, updateCredential } from "../controllers/credentials";
 import { createWorkFlow, deleteWorkFlow, getWorkflowById, getWorkflows, runManualWorkflow, updateWorkFlow } from "../controllers/workflow";
-import { formClose, formOpen, getForm, getFormResponses, submitForm } from "../controllers/forms";
+import { formClose, formOpen, getForm, getFormResponses, submitForm, updateFormSecret } from "../controllers/forms";
 
 const router = express.Router();
 
@@ -31,5 +31,6 @@ router.get("/forms/:formId", getForm);
 router.get("/forms/:formId/responses",authMiddleware,getFormResponses);
 router.patch("/forms/:formId/open", authMiddleware, formOpen);
 router.patch("/forms/:formId/close", authMiddleware, formClose);
+router.patch("/forms/:formId/secret",authMiddleware, updateFormSecret);
 
 export default router ;

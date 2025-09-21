@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useForm, useSubmitForm } from "../hooks/useForms";
 import { nodeIcons } from "../lib/nodeIcons";
 import { useThemeStore } from "../store/useThemeStore";
+import type { WorkflowForm } from "../types/workflow";
 
 export default function FormPage() {
     const { formId } = useParams<{ formId: string }>();
@@ -15,30 +16,50 @@ export default function FormPage() {
     const submitForm = useSubmitForm(formId!);
 
     if (isLoading) return <p className="p-4">Loading form...</p>;
-    if (error) return <p className="p-4 text-red-500">Error loading form</p>;
 
-    if (data?.form?.secret && !enteredSecret) {
+    if (enteredSecret && error) {
         return (
-            <div className="p-6 max-w-md mx-auto space-y-4 border border-white">
-                <h2 className="text-xl font-bold">This form is protected</h2>
-                <input
-                    type="password"
-                    placeholder="Enter form secret"
-                    value={secret}
-                    onChange={(e) => setSecret(e.target.value)}
-                    className="w-full border px-3 py-2 rounded"
-                />
-                <button
-                    onClick={() => setEnteredSecret(secret)}
-                    className="px-4 py-2 bg-blue-500 text-white rounded"
-                >
-                    Unlock
-                </button>
+            <div className="min-h-[80vh] flex items-center justify-center">
+                <div className="px-6 py-12 max-w-md mx-auto space-y-4 border border-red-400">
+                    <h2 className="text-xl font-bold text-red-500">Invalid or wrong secret</h2>
+                    <button
+                        onClick={() => setEnteredSecret(null)}
+                        className="px-4 py-2 bg-blue-500 text-white rounded"
+                    >
+                        Try Again
+                    </button>
+                </div>
             </div>
         );
     }
 
-    const form = data?.form;
+    if (error) return <p className="p-4 text-red-500">Error loading form</p>;
+
+    if (data?.kind === "requiresSecret" && !enteredSecret) {
+        return (
+            <div className="min-h-[80vh] flex items-center justify-center">
+                <div className="p-14 max-w-md mx-auto space-y-4 border border-white">
+                    <h2 className="text-xl font-bold">This form is protected</h2>
+                    <input
+                        type="password"
+                        placeholder="Enter form secret"
+                        value={secret}
+                        onChange={(e) => setSecret(e.target.value)}
+                        className="w-full border px-3 py-2 rounded"
+                    />
+                    <button
+                        onClick={() => setEnteredSecret(secret)}
+                        className="px-4 py-2 bg-blue-500 text-white rounded"
+                    >
+                        Submit
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
+
+    const form = (data as { form: WorkflowForm })?.form;
     if (!form) return <p className="p-4">Form not found or inactive</p>;
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -70,6 +91,19 @@ export default function FormPage() {
         }
 
     };
+
+    if (!form.isActive) {
+        return (
+            <div className="min-h-[80vh] flex items-center justify-center">
+                <div className="p-6 max-w-md w-full space-y-4 border border-red-400 text-center">
+                    <h2 className="text-xl font-bold text-red-500">This form is closed</h2>
+                    <p className="text-gray-500">The form owner has closed submissions.</p>
+                    <p className="text-gray-500">Contact the form owner to reopen it if you think this is a mistake.</p>
+                </div>
+            </div>
+        );
+    }
+
 
     return (
         <div className={`min-h-[80vh] max-w-lg mx-auto my-4 p-6 space-y-6 border ${isDark ? "border-white rounded-md" : "border-black rounded-md"}`}>

@@ -14,9 +14,9 @@ export const submitForm = async (req: Request, res: Response) => {
         const form = await prisma.form.findUnique({ where: { id: formId }, include: { workflow: true } });
         if (!form) return res.status(404).json({ message: "Form is Invalid" });
         if (!form.isActive) return res.status(400).json({ message: "Form is not active anymore" });
-         
+
         const fieldsArray = Array.isArray(form.fields) ? form.fields : [];
-        
+
         const missingFields = fieldsArray
             .filter((f: any) => f.required && !req.body[f.key])
             .map((f: any) => f.label);
@@ -85,10 +85,11 @@ export const getForm = async (req: Request, res: Response) => {
         }
 
         if (!form.isActive) {
-            return res.status(403).json({
-                message: "Form is not active, contact the owner to re open it"
-            })
+            return res.status(200).json({
+                form: { message: "The form is closed", isActive: false }
+            });
         }
+
 
         if (form.secret && !formSecret) {
             return res.status(201).json({
@@ -263,3 +264,47 @@ export const formClose = async (req: AuthRequest, res: Response) => {
         })
     }
 }
+
+
+export const updateFormSecret = async (req: AuthRequest, res: Response) => {
+    try {
+        const userId = req.userId!;
+        const { formId } = req.params;
+        const { secret } = req.body;
+
+        if (!formId) {
+            return res.status(400).json({
+                message: "No form id passed through parameters"
+            })
+        }
+
+        if (!secret || typeof secret !== "string") {
+            return res.status(400).json({
+                message: "Secret must be a string"
+            });
+        }
+
+        const form = await prisma.form.findUnique({
+            where: { id: formId },
+            include: { workflow: true }
+        });
+
+        if (!form) {
+            return res.status(404).json({ message: "Form Doesn't exists" });
+        }
+
+        if (form.userId !== userId) {
+            return res.status(403).json({ message: "Not allowed to update this form" });
+        }
+
+        const updated = await prisma.form.update({
+            where: { id: formId },
+            data: { secret: secret || null },
+        });
+
+        return res.status(200).json({ message: "Form secret updated", form: updated });
+    } catch (err: any) {
+        console.error(err);
+        return res.status(500).json({ message: "Internal server error", error: err.message });
+    }
+};

@@ -21,7 +21,7 @@ export default function Dashboard() {
   return (
     <div className="pb-32 pt-6 px-4">
       <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
+        <div className="md:flex max-md:space-y-4 justify-between items-center mb-8">
           <h1 className="flex items-center gap-3 text-3xl font-bold">
             <img src={nodeIcons.Workflow} alt="Workflow" className="w-8 h-8" />
             My Workflows

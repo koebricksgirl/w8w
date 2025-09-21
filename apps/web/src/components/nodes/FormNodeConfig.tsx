@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Field, FormNodeConfigProps } from "../../types/node";
 import { FRONTEND_URL } from "../../utils/config";
 import { CopyBox } from "../CopyBox";
+import { useCloseForm, useOpenForm, useUpdateFormSecret } from "../../hooks/useForms";
 
 export default function FormNodeConfig({ initialFields, onSave, formEntry }: FormNodeConfigProps) {
     const [mode, setMode] = useState<"builder" | "json">("builder");
@@ -9,6 +10,17 @@ export default function FormNodeConfig({ initialFields, onSave, formEntry }: For
     const [rawJson, setRawJson] = useState(
         JSON.stringify(initialFields || [], null, 2)
     );
+    const [active, setActive] = useState<boolean>(formEntry?.isActive ?? true);
+    const [secretValue, setSecretValue] = useState(formEntry?.secret || "");
+
+    const { mutate: openForm } = useOpenForm();
+    const { mutate: closeForm } = useCloseForm();
+    const { mutate: updateSecret } = useUpdateFormSecret();
+
+    useEffect(() => {
+  setSecretValue(formEntry?.secret || "");
+}, [formEntry?.secret]);
+
 
     const addField = () => {
         setFields([...fields, { label: "", key: "", type: "text", required: false }]);
@@ -53,7 +65,7 @@ export default function FormNodeConfig({ initialFields, onSave, formEntry }: For
     const handleSave = () => {
         const finalFields = mode === "builder" ? fields : JSON.parse(rawJson || "[]");
 
-        const keys = finalFields.map((f: Field) => f.key.trim()); 
+        const keys = finalFields.map((f: Field) => f.key.trim());
         const duplicates = keys.filter((k: string, i: number) => keys.indexOf(k) !== i);
 
 
@@ -204,14 +216,86 @@ export default function FormNodeConfig({ initialFields, onSave, formEntry }: For
                 <h4 className="font-medium mb-2">Form URL</h4>
                 {formEntry ? (
                     <div className="space-y-2">
-                          <span>{formEntry.title || "Untitled Form"}</span>
+                        <span>{formEntry.title || "Untitled Form"}</span>
                         <div className="flex items-center justify-between">
-                          <CopyBox className="block p-2 rounded bg-black text-white overflow-x-hidden" text={`${FRONTEND_URL}/forms/${formEntry.id}`}/>
+                            <CopyBox className="block p-2 rounded bg-black text-white overflow-x-hidden" text={`${FRONTEND_URL}/forms/${formEntry.id}`} />
                         </div>
                     </div>
                 ) : (
                     <p className="text-sm text-zinc-500">Form not yet created. Save workflow first.</p>
                 )}
+
+                {formEntry && (
+                    <div className="p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 space-y-4">
+                        <h4 className="font-medium">Form Controls</h4>
+                        <div className="flex items-center justify-between">
+                            <span className="text-sm">Form Active</span>
+                            <label className="relative inline-flex items-center cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    className="sr-only peer"
+                                    checked={active}
+                                    onChange={async (e) => {
+                                        try {
+                                             setActive(e.target.checked); 
+
+                                            if (e.target.checked) {
+                                                openForm(formEntry.id, {
+                                                    onSuccess: () => alert("Form opened"),
+                                                    onError: () => {
+                                                        setActive(false); 
+                                                        alert("Failed to open form");
+                                                    }
+                                                });
+
+                                            } else {
+                                                closeForm(formEntry.id, {
+                                                    onSuccess: () => alert("Form closed"),
+                                                    onError: () => {
+                                                        setActive(true);
+                                                        alert("Failed to close form")
+                                                    }
+                                                });
+
+                                            }
+                                        } catch (err) {
+                                            console.error(err);
+                                            alert("Failed to toggle form");
+                                        }
+                                    }}
+                                />
+                                <div className="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-green-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full" />
+                            </label>
+                        </div>
+
+                        <div>
+                            <label className="block text-sm mb-1">Form Secret</label>
+                            <input
+                                type="text"
+                                defaultValue={formEntry.secret || ""}
+                                placeholder="Enter secret (optional)"
+                                className="w-full border px-2 py-1 rounded"
+                                onChange={(e) => setSecretValue(e.target.value)}
+                                onBlur={async () => {
+                                    try {
+                                        updateSecret(
+                                            { formId: formEntry.id, secret: secretValue }, 
+                                            {
+                                                onSuccess: () => alert("secret updated"),
+                                                onError: () => alert("Failed to update secret"),
+                                            }
+                                        );
+
+                                    } catch (err) {
+                                        console.error(err);
+                                        alert("Failed to update secret");
+                                    }
+                                }}
+                            />
+                        </div>
+                    </div>
+                )}
+
             </div>
         </div>
     );
