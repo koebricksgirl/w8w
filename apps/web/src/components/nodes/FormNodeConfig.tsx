@@ -3,6 +3,7 @@ import type { Field, FormNodeConfigProps } from "../../types/node";
 import { FRONTEND_URL } from "../../utils/config";
 import { CopyBox } from "../CopyBox";
 import { useCloseForm, useOpenForm, useUpdateFormSecret } from "../../hooks/useForms";
+import { useNavigate } from "react-router-dom";
 
 export default function FormNodeConfig({ initialFields, onSave, formEntry }: FormNodeConfigProps) {
     const [mode, setMode] = useState<"builder" | "json">("builder");
@@ -16,6 +17,8 @@ export default function FormNodeConfig({ initialFields, onSave, formEntry }: For
     const { mutate: openForm } = useOpenForm();
     const { mutate: closeForm } = useCloseForm();
     const { mutate: updateSecret } = useUpdateFormSecret();
+    
+    const navigate = useNavigate();
 
     useEffect(() => {
   setSecretValue(formEntry?.secret || "");
@@ -219,6 +222,15 @@ export default function FormNodeConfig({ initialFields, onSave, formEntry }: For
                         <span>{formEntry.title || "Untitled Form"}</span>
                         <div className="flex items-center justify-between">
                             <CopyBox className="block p-2 rounded bg-black text-white overflow-x-hidden" text={`${FRONTEND_URL}/forms/${formEntry.id}`} />
+                        </div>
+                        <div>
+                            <h3
+                            className="text-yellow-600 cursor-pointer mb-2"
+                            onClick={() => {
+                                navigate(`/form/${formEntry.id}/responses`)
+                            }}
+                            >Form Responses</h3>
+                             <CopyBox className="block p-2 rounded bg-black text-white overflow-x-hidden" text={`${FRONTEND_URL}/form/${formEntry.id}/responses`} />
                         </div>
                     </div>
                 ) : (

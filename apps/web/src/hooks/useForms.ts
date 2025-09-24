@@ -22,6 +22,16 @@ export function useForm(formId: string, secret?: string) {
   });
 }
 
+export function useFormResponses(formId:string) {
+  return useQuery({
+    queryKey: ["form", formId],
+    queryFn: async () => {
+      const res = await forms.responses(formId);
+      return { responses: res.formResponses}
+    }
+  })
+}
+
 export function useSubmitForm(formId: string) {
   return useMutation({
     mutationFn: (data: Record<string, any>) => forms.submit(formId, data),
