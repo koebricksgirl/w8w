@@ -69,7 +69,11 @@ export default function App() {
               <Route path="/docs" element={<Docs />} />
               <Route path="/docs/:id" element={<DocDetail />} />
               <Route path="/forms/:formId" element={<FormPage />} />
-               <Route path="/form/:formId/responses" element={<FormResponses />} />
+               <Route path="/form/:formId/responses" element={
+                  <ProtectedRoute>
+                <FormResponses />
+                </ProtectedRoute>
+                } />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
