@@ -39,9 +39,13 @@ export default function NodeConfigDialog({ node, credentials, onClose, onSave, w
         defaultConfig.prompt = node.data.config?.prompt || '';
         defaultConfig.memory = node.data.config?.memory ?? false;
         break;
+      case 'Slack':
+        defaultConfig.channel = node.data.config?.channel || '';
+        defaultConfig.message = node.data.config?.message || '';
+        break;
       case 'Form':
         defaultConfig.title = node.data.config?.title || '',
-          defaultConfig.fields = node.data.config?.fields || []
+        defaultConfig.fields = node.data.config?.fields || []
         break;
     }
 
@@ -81,6 +85,9 @@ export default function NodeConfigDialog({ node, credentials, onClose, onSave, w
           outputFields = '';
           break;
         case 'Telegram':
+          outputFields = '';
+          break;
+        case 'Slack':
           outputFields = '';
           break;
       }
@@ -136,6 +143,25 @@ export default function NodeConfigDialog({ node, credentials, onClose, onSave, w
           type: 'textarea',
           helper: 'Can include variables from webhook or connected nodes'
         };
+      case 'Slack':
+        switch (key){
+          case "channel": 
+            return {
+              label: "Slack Cannel Id",
+              placeholder: "Enter your slack channel Id",
+              type: "text",
+              helper: "You can get slack channel id from slack api. Also give bot channel permission"
+            };
+          case "text":
+            return {
+              label: "Slack Message",
+              placeholder: "Enter your slack message",
+              type: "text",
+              helper: "Enter the message you want your bot to send"
+            }
+        }
+        break;
+
       case 'Form':
         switch (key) {
           case 'title':

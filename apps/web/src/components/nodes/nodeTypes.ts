@@ -6,6 +6,7 @@ const nodeTypes = {
   [Platform.Telegram]: BaseNode,
   [Platform.Gemini]: BaseNode,
   [Platform.Form]:  BaseNode,
+  [Platform.Slack]: BaseNode,
   custom: BaseNode,
 } as const;
 
