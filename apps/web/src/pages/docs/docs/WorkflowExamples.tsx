@@ -443,6 +443,59 @@ Submitted Form Response:
         </ul>
       </section>
 
+           <section className={`rounded-xl p-6 mb-8 ${cardBg} border ${isDark ? "border-zinc-700" : "border-zinc-200"}`}>
+        <h2 className="text-2xl font-semibold mb-3">7) Example — Manual Slack Workflow</h2>
+
+        <p className="mb-2">
+          Workflow name: <strong>Send Message to Slack</strong> — Type: <strong>Manual</strong>
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <img
+            src="https://pbs.twimg.com/media/G1qfsSpW8AAbvgl?format=jpg&name=medium"
+            alt="slack workflow"
+            className="rounded shadow-md w-full"
+          />
+        </div>
+
+        <h3 className="text-lg font-semibold mb-2">Node setup walkthrough</h3>
+
+        <ol className="list-decimal pl-6 space-y-3">
+          <li>
+            <strong>Slack (node1)</strong>
+            <ul className="list-disc pl-6 mt-2 space-y-1">
+              <li>
+                Credential: <CopyBox text="My Slack Bot (Choose from your available slack credentials)" className="mt-2" />
+              </li>
+              <li>
+                Slack Channel Id:{" "}
+                <CopyBox text="C09H17HGD8A (write your own)" className="mt-2" />
+                <p className={textMuted}>
+                  Get channel IDs via{" "}
+                  <code>conversations.list</code> Slack API and make sure your bot is{" "}
+                  <code>/invite</code>d to that channel.
+                  <CopyBox text="https://slack.com/api/conversations.list" className="mt-2"/>
+                  If you want to know more how to get channel Id and set up credentials for slack go <span 
+                  className="text-blue-400 underline cursor-pointer"
+                  onClick={() => {
+                    navigate("/docs/2")
+                  }}
+                  >here</span>
+                </p>
+              </li>
+              <li>
+                Message:{" "}
+                <CopyBox text="Hello from W8W! I am Rudra" className="mt-2" />
+              </li>
+            </ul>
+          </li>
+        </ol>
+
+        <p className="mt-4">
+          <strong>How to run:</strong> Since this is a manual workflow, trigger it from your Dashboard or hit:
+        </p>
+      </section>
+
 
     </div>
   );

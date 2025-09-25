@@ -12,6 +12,7 @@ export default function CredentialsSetup() {
         { name: "Telegram", icon: nodeIcons["Telegram"] },
         { name: "ResendEmail", icon: nodeIcons["ResendEmail"] },
         { name: "Google Gemini", icon: nodeIcons["Gemini"] },
+        { name: "Slack", icon: nodeIcons["Slack"]},
     ];
 
     return (
@@ -114,6 +115,29 @@ export default function CredentialsSetup() {
                             <li>Use your verified email (e.g. <span className="font-mono">noreply@yourdomain.com</span>) as <span className="font-mono">resendDomainMail</span>.</li>
                         </ol>
                         <p className="text-sm my-3 font-medium"> <span className="text-yellow-400"> Special Mention: </span>If you don't provide us your verified domain mail then you will not able to send message to any other email id rather than your resend account email id </p>
+                    </div>
+
+                         <div className="p-4 rounded-xl border-l-4 border-pink-400 bg-pink-50 dark:bg-pink-900/20">
+                        <h3 className="font-bold text-lg mb-3 flex items-center gap-2">
+                            <img src={nodeIcons["Slack"]} alt="Slack" className="h-6 w-6" /> Slack
+                        </h3>
+                        <ul className="list-disc pl-6 mb-3 text-sm">
+                            <li><strong>botToken</strong></li>
+                            <li><strong>channelId</strong> (not necessary during credentials set up)</li>
+                        </ul>
+                        <p className="text-sm mb-3 font-semibold">Setup:</p>
+                        <ol className="list-decimal pl-6 space-y-2 text-sm">
+                            <li>Create a Slack App at <a href="https://api.slack.com/apps" target="_blank" rel="noreferrer" className="text-blue-500 underline">Slack API Apps</a>.</li>
+                            <li>Enable <strong>Bots</strong> feature and add the <strong>chat:write</strong> scope.</li>
+                            <li>Install the app to your workspace and copy the <span className="font-mono">Bot User OAuth Token</span>.</li>
+                            <li>Invite your bot to the channel where you want to post: <span className="font-mono">/invite @YourBotName</span>.</li>
+                            <li>Fetch your channel IDs via Slack API:
+                                <CopyBox className="mt-2" text="https://slack.com/api/conversations.list?types=public_channel,private_channel" />
+                                Add your bot token as Bearer in Authorization header.
+                            </li>
+                            <li>Find the <span className="font-mono">id</span> field of your channel (e.g. <span className="font-mono">C09H17HGD8A</span>).</li>
+                            <li>Use that channel ID in the workflow node.</li>
+                        </ol>
                     </div>
 
                 </div>
