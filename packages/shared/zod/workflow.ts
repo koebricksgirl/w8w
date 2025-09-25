@@ -3,7 +3,7 @@ import * as z from 'zod';
 
 const nodeSchema = z.object({
   id: z.string(),
-  type: z.enum([Platform.ResendEmail,Platform.Telegram,Platform.Gemini,Platform.Form]),
+  type: z.enum([Platform.ResendEmail,Platform.Telegram,Platform.Gemini,Platform.Form,Platform.Slack]),
   config: z.record(z.string(), z.any()),
   credentialsId: z.string().optional(),
   position: z.object({  

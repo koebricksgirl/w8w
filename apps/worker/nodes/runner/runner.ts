@@ -1,6 +1,7 @@
 import { useForm } from "../form/useForm";
 import { runGeminiNode } from "../gemini/gemini";
 import { sendEmail } from "../resend";
+import { sendSlack } from "../slack";
 import { sendTelegramMessage } from "../telegram";
 
 export async function runNode(node:any,context: Record<string,any>,workflowId?:string) {
@@ -17,6 +18,9 @@ export async function runNode(node:any,context: Record<string,any>,workflowId?:s
 
             case "Form":
                 return useForm(node,workflowId);
+
+            case "Slack":
+                return sendSlack(node.config,node.credentialsId,context)
                 
             default:
                throw new Error(`Unknown node type: ${node.type}`);

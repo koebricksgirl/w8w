@@ -32,16 +32,28 @@ const geminiSchema = z.object({
   }),
 });
 
+const slackSchema = z.object({
+  title: z.string().min(1, "Platform title needed"),
+  platform: z.literal(Platform.Slack),
+  data: z.object({
+    botToken: z.string().min(1, "Slack bot token is required"),
+  }),
+});
+
+
+
 export const credentialsPostSchema = z.discriminatedUnion("platform", [
   resendSchema,
   telegramSchema,
   geminiSchema,
+  slackSchema,
 ]);
 
 export const credentialsUpdateSchema = z.discriminatedUnion("platform", [
   resendSchema,
   telegramSchema,
   geminiSchema,
+  slackSchema,
 ]);
 
 

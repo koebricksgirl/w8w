@@ -111,6 +111,7 @@ enum Platform {
   Telegram
   ResendEmail
   Gemini
+  Slack
 }
 
 enum Methods {
