@@ -21,6 +21,10 @@ export function renderWorkflowSequence(workflow: Workflow) {
     current = next;
  }
 
+ if(sequence.length === 0 && workflow.nodes) {
+  sequence = Object.values(workflow.nodes).map((n) => n.type)
+ }
+
 return (
     <div className="flex items-center gap-2">
       <img src={nodeIcons.Workflow} alt="Workflow" className="w-6 h-6" /> <br />
