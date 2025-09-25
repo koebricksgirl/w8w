@@ -152,7 +152,7 @@ export default function NodeConfigDialog({ node, credentials, onClose, onSave, w
               type: "text",
               helper: "You can get slack channel id from slack api. Also give bot channel permission"
             };
-          case "text":
+          case "message":
             return {
               label: "Slack Message",
               placeholder: "Enter your slack message",
@@ -246,7 +246,7 @@ export default function NodeConfigDialog({ node, credentials, onClose, onSave, w
                     <textarea
                       value={value}
                       onChange={(e) => setConfig({ ...config, [key]: e.target.value })}
-                      className={`w-full border rounded p-2 min-h-[100px] ${isDark ? 'bg-zinc-800 border-zinc-700 text-white' : 'bg-white border-zinc-200'
+                      className={`w-full border rounded p-2 min-h-[280px] ${isDark ? 'bg-zinc-800 border-zinc-700 text-white' : 'bg-white border-zinc-200'
                         }`}
                       placeholder={fieldInfo.placeholder}
                     />

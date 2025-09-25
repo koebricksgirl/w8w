@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { CheckIcon, CopyIcon } from "@radix-ui/react-icons";
+import { useThemeStore } from "../store/useThemeStore";
 
-export function CopyBox({ text,className }: { text: string,className?:string }) {
+export function CopyBox({ text, className }: { text: string, className?: string }) {
   const [copied, setCopied] = useState(false);
+  const { theme } = useThemeStore();
+  const isDark = theme === 'dark';
 
   const handleCopy = async () => {
     try {
@@ -15,7 +18,7 @@ export function CopyBox({ text,className }: { text: string,className?:string }) 
   };
 
   return (
-    <div className={`relative bg-zinc-100 dark:bg-zinc-800 border border-blue-400 rounded-lg p-4 mb-4 ${className}`}>
+    <div className={`relative ${isDark ? "bg-zinc-800" : "bg-zinc-600"} border border-blue-400 rounded-lg p-4 mb-4 ${className}`}>
       <pre className="whitespace-pre-wrap break-words text-sm text-white">{text}</pre>
       <button
         onClick={handleCopy}

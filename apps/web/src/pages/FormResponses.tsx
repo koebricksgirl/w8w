@@ -26,9 +26,9 @@ export const FormResponses = () => {
         }
         return (
             <div className={`min-h-[80vh] flex items-center justify-center ${isDark ? "text-white" : "text-black"}`}>
-                <div className="border border-red-400 bg-red-50 dark:bg-zinc-900 rounded p-6 text-center max-w-md w-full">
+                <div className={`border border-red-400  ${isDark?"bg-zinc-900":"bg-red-50"} rounded p-6 text-center max-w-md w-full`}>
                     <h2 className="text-xl font-bold text-red-500 mb-2">Error</h2>
-                    <div>{apiMessage}</div>
+                    <div className={`${isDark?"text-white":"text-gray-400"}`}>{apiMessage}</div>
                 </div>
             </div>
         );
@@ -36,7 +36,7 @@ export const FormResponses = () => {
 
     if (isLoading) {
         return <div className={`min-h-[80vh] flex items-center justify-center ${isDark ? "text-white" : "text-black"}`}>
-            <div className={`bg-red-50 dark:bg-zinc-900 rounded p-6 text-center max-w-md w-full`}>
+            <div className={`${isDark?"bg-zinc-900":"bg-red-50"} rounded p-6 text-center max-w-md w-full`}>
                 <h2 className="text-xl font-bold mb-2">Loading...</h2>
             </div>
         </div>

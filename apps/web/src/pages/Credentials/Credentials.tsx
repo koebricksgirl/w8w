@@ -193,7 +193,7 @@ export default function Credentials() {
                         <p className="text-zinc-400 my-4">Would you like to delete this credential?</p>
                         <div className="flex gap-4">
                         <button
-                            className="text-white bg-red-500 py-2 px-4 rounded-lg cursor-pointer"
+                            className={`text-white bg-red-500 ${isDark?"hover:bg-red-800":"hover:bg-red-600"} py-2 px-4 rounded-lg cursor-pointer`}
                             onClick={() => {
                                 if (!selectedCredential?.id) return;
                                 deleteCredential.mutate(selectedCredential.id, {
@@ -206,7 +206,8 @@ export default function Credentials() {
                         >
                             Delete
                         </button>
-                        <button className="text-white bg-blue-600 rounded-lg py-2 px-4 cursor-pointer" onClick={() => setModalType(null)}>Cancel</button>
+                        <button className={`text-white bg-blue-600 ${isDark?"hover:bg-blue-800":"hover:bg-blue-500"} rounded-lg py-2 px-4 cursor-pointer`}
+                         onClick={() => setModalType(null)}>Cancel</button>
                         </div>
                     </Modal>
                 )}

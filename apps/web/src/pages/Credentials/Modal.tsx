@@ -9,7 +9,7 @@ export function Modal({ children, onClose }: { children: React.ReactNode, onClos
             <div className={`${isDark ? "bg-zinc-900" : "bg-white"} p-6 rounded shadow-lg min-w-[300px] relative`}>
                 {children}
                 <button
-                    className="absolute top-3 right-3 text-zinc-400 hover:text-zinc-100 cursor-pointer"
+                    className={`absolute top-3 right-3 text-zinc-400 ${isDark?"hover:text-zinc-100":"hover:text-zinc-600"} cursor-pointer`}
                     onClick={onClose}
                     aria-label="Close"
                 >
