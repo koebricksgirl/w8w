@@ -4,6 +4,7 @@ import { FRONTEND_URL } from "../../utils/config";
 import { CopyBox } from "../CopyBox";
 import { useCloseForm, useOpenForm, useUpdateFormSecret } from "../../hooks/useForms";
 import { useNavigate } from "react-router-dom";
+import { useThemeStore } from "../../store/useThemeStore";
 
 export default function FormNodeConfig({ initialFields, onSave, formEntry }: FormNodeConfigProps) {
     const [mode, setMode] = useState<"builder" | "json">("builder");
@@ -17,12 +18,15 @@ export default function FormNodeConfig({ initialFields, onSave, formEntry }: For
     const { mutate: openForm } = useOpenForm();
     const { mutate: closeForm } = useCloseForm();
     const { mutate: updateSecret } = useUpdateFormSecret();
-    
+
     const navigate = useNavigate();
 
+    const { theme } = useThemeStore();
+    const isDark = theme === 'dark';
+
     useEffect(() => {
-  setSecretValue(formEntry?.secret || "");
-}, [formEntry?.secret]);
+        setSecretValue(formEntry?.secret || "");
+    }, [formEntry?.secret]);
 
 
     const addField = () => {
@@ -211,11 +215,11 @@ export default function FormNodeConfig({ initialFields, onSave, formEntry }: For
                 <textarea
                     value={rawJson}
                     onChange={(e) => setRawJson(e.target.value)}
-                    className="w-full border rounded p-2 min-h-[150px]"
+                    className="w-full border rounded p-2 min-h-[280px]"
                 />
             )}
 
-            <div className={`p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800`}>
+            <div className={`p-2 rounded-lg ${isDark?"bg-zinc-800":"bg-zinc-100"}`}>
                 <h4 className="font-medium mb-2">Form URL</h4>
                 {formEntry ? (
                     <div className="space-y-2">
@@ -225,12 +229,12 @@ export default function FormNodeConfig({ initialFields, onSave, formEntry }: For
                         </div>
                         <div>
                             <h3
-                            className="text-yellow-600 cursor-pointer mb-2"
-                            onClick={() => {
-                                navigate(`/form/${formEntry.id}/responses`)
-                            }}
+                                className="text-yellow-600 cursor-pointer mb-2"
+                                onClick={() => {
+                                    navigate(`/form/${formEntry.id}/responses`)
+                                }}
                             >Form Responses</h3>
-                             <CopyBox className="block p-2 rounded bg-black text-white overflow-x-hidden" text={`${FRONTEND_URL}/form/${formEntry.id}/responses`} />
+                            <CopyBox className="block p-2 rounded bg-black text-white overflow-x-hidden" text={`${FRONTEND_URL}/form/${formEntry.id}/responses`} />
                         </div>
                     </div>
                 ) : (
@@ -238,7 +242,7 @@ export default function FormNodeConfig({ initialFields, onSave, formEntry }: For
                 )}
 
                 {formEntry && (
-                    <div className="p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 space-y-4">
+                    <div className={`p-2 rounded-lg ${isDark?"bg-zinc-800":"bg-zinc-100"} space-y-4`}>
                         <h4 className="font-medium">Form Controls</h4>
                         <div className="flex items-center justify-between">
                             <span className="text-sm">Form Active</span>
@@ -249,13 +253,13 @@ export default function FormNodeConfig({ initialFields, onSave, formEntry }: For
                                     checked={active}
                                     onChange={async (e) => {
                                         try {
-                                             setActive(e.target.checked); 
+                                            setActive(e.target.checked);
 
                                             if (e.target.checked) {
                                                 openForm(formEntry.id, {
                                                     onSuccess: () => alert("Form opened"),
                                                     onError: () => {
-                                                        setActive(false); 
+                                                        setActive(false);
                                                         alert("Failed to open form");
                                                     }
                                                 });
@@ -291,7 +295,7 @@ export default function FormNodeConfig({ initialFields, onSave, formEntry }: For
                                 onBlur={async () => {
                                     try {
                                         updateSecret(
-                                            { formId: formEntry.id, secret: secretValue }, 
+                                            { formId: formEntry.id, secret: secretValue },
                                             {
                                                 onSuccess: () => alert("secret updated"),
                                                 onError: () => alert("Failed to update secret"),

@@ -116,7 +116,7 @@ export default function Dashboard() {
             <p>Are you sure you want to delete <span className="font-bold">{selectedWorkflow.title}</span>?</p>
             <div className="flex gap-2 mt-6 justify-end">
               <button
-                className="px-4 py-2 text-white rounded bg-blue-500 dark:bg-blue-600 cursor-pointer"
+                className={`px-4 py-2 text-white rounded ${isDark?"bg-blue-600 hover:bg-blue-800":" bg-blue-500 hover:bg-blue-400"} cursor-pointer`}
                 onClick={() => setModalType(null)}
               >
                 Cancel

@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { Platform } from "../../types/platform";
 import { PLATFORM_FIELDS, PLATFORM_OPTIONS } from "../../utils/platforms";
 import type { Credential } from "../../types/credential";
+import { useThemeStore } from "../../store/useThemeStore";
 
 export function CredentialEditBody({
   credential,
@@ -20,6 +21,9 @@ export function CredentialEditBody({
   );
   const [data, setData] = useState<{ [key: string]: string }>(initialData);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  
+   const { theme } = useThemeStore();
+    const isDark = theme === 'dark';
 
   const handlePlatformChange = (newPlatform: Platform) => {
     setPlatform(newPlatform);
@@ -113,7 +117,7 @@ export function CredentialEditBody({
       <div className="flex gap-2 justify-end">
         <button
           type="button"
-          className="px-4 py-2 rounded bg-zinc-200 dark:bg-zinc-700"
+          className={`px-4 py-2 rounded ${isDark?"bg-zinc-700 hover:bg-zinc-500":"bg-zinc-200 hover:bg-zinc-400"}`}
           onClick={onCancel}
         >
           Cancel

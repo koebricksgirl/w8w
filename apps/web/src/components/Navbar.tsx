@@ -73,7 +73,7 @@ export default function Navbar() {
 
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="md:hidden p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/10"
+          className={`md:hidden p-2 rounded-lg ${isDark?"hover:bg-white/10":"hover:bg-zinc-100"}`}
         >
           <div className="space-y-1">
             <span

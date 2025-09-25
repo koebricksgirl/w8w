@@ -16,11 +16,11 @@ export default function Home() {
             <LightningBoltIcon className="w-4 h-4" />
             <span className="text-sm">Powerful Workflow Automation</span>
           </div>
-          
+
           <h1 className="text-6xl font-bold max-w-4xl leading-tight">
-            Automate Your Workflows with Ease 
+            Automate Your Workflows with Ease
           </h1>
-          
+
           <p className="text-xl max-w-2xl mx-auto">
             Build, run, and scale automation workflows effortlessly. Inspired by n8n's
             powerful engine, reimagined for modern teams.
@@ -30,21 +30,24 @@ export default function Home() {
             <Dialog>
               <DialogTrigger asChild>
                 <button className="inline-flex items-center gap-2 px-8 py-4 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition-all"
-                onClick={ () => navigate("/dashboard")}
+                  onClick={() => navigate("/dashboard")}
                 >
                   Get Started
                   <ArrowRightIcon className="w-4 h-4" />
                 </button>
               </DialogTrigger>
             </Dialog>
-            
-            <button className={`px-8 py-4 rounded-lg font-semibold border transition-all ${
-              isDark 
-                ? "hover:bg-zinc-800" 
+
+            <a className={`px-8 py-4 rounded-lg font-semibold border transition-all ${isDark
+                ? "hover:bg-zinc-800"
                 : "hover:bg-zinc-100/40"
-            }`}>
+              }`}
+              href="https://github.com/Rudra-Sankha-Sinhamahapatra/w8w/blob/main/README.md"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Watch Demo
-            </button>
+            </a>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16 text-left">
@@ -65,13 +68,12 @@ export default function Home() {
                 description: "Connect with your favorite tools and services"
               }
             ].map((feature, i) => (
-              <div 
-                key={i} 
-                className={`p-6 rounded-lg border transition-all ${
-                  isDark 
-                    ? "hover:bg-zinc-800 bg-zinc-900" 
+              <div
+                key={i}
+                className={`p-6 rounded-lg border transition-all ${isDark
+                    ? "hover:bg-zinc-800 bg-zinc-900"
                     : "hover:bg-zinc-100/40 bg-white"
-                }`}>
+                  }`}>
                 <div className="p-3 rounded-lg border w-fit mb-4">
                   {feature.icon}
                 </div>

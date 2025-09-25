@@ -23,7 +23,7 @@ export default function CredentialsSetup() {
                 {platforms.map((platform) => (
                     <div
                         key={platform.name}
-                        className="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm bg-white dark:bg-zinc-700 shadow-sm"
+                        className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm ${isDark ? "bg-zinc-700" : "bg-white"} shadow-sm`}
                     >
                         <img src={platform.icon} alt={platform.name} className="h-5 w-5" />
                         <span className={`${isDark ? "text-white" : "text-zinc-900"}`}>{platform.name}</span>
@@ -45,7 +45,7 @@ export default function CredentialsSetup() {
 
                 <div className="space-y-8">
              
-                    <div className="p-4 rounded-xl border-l-4 border-blue-400 bg-blue-50 dark:bg-blue-900/20">
+                    <div className={`p-4 rounded-xl border-l-4 border-blue-400 ${isDark?"bg-blue-900/20":"bg-blue-50"}`}>
                         <h3 className="font-bold text-lg mb-3 flex items-center gap-2">
                             <img src={nodeIcons["Telegram"]} alt="Telegram" className="h-6 w-6" /> Telegram
                         </h3>
@@ -79,7 +79,7 @@ export default function CredentialsSetup() {
 
 
              
-                    <div className="p-4 rounded-xl border-l-4 border-purple-400 bg-purple-50 dark:bg-purple-900/20">
+                    <div className={`p-4 rounded-xl border-l-4 border-purple-400 ${isDark?"bg-purple-900/20":"bg-purple-50"}`}>
                         <h3 className="font-bold text-lg mb-3 flex items-center gap-2">
                             <img src={nodeIcons["Gemini"]} alt="Gemini" className="h-6 w-6" /> Google Gemini
                         </h3>
@@ -97,7 +97,7 @@ export default function CredentialsSetup() {
                     </div>
 
               
-                    <div className="p-4 rounded-xl border-l-4 border-green-400 bg-green-50 dark:bg-green-900/20">
+                    <div className={`p-4 rounded-xl border-l-4 border-green-400 ${isDark?"bg-green-900/20":"bg-green-50"}`}>
                         <h3 className="font-bold text-lg mb-3 flex items-center gap-2">
                             <img src={nodeIcons["ResendEmail"]} alt="ResendEmail" className="h-6 w-6" /> Resend Email
                         </h3>
@@ -117,7 +117,7 @@ export default function CredentialsSetup() {
                         <p className="text-sm my-3 font-medium"> <span className="text-yellow-400"> Special Mention: </span>If you don't provide us your verified domain mail then you will not able to send message to any other email id rather than your resend account email id </p>
                     </div>
 
-                         <div className="p-4 rounded-xl border-l-4 border-pink-400 bg-pink-50 dark:bg-pink-900/20">
+                         <div className={`p-4 rounded-xl border-l-4 border-pink-400 ${isDark?"bg-pink-900/20":"bg-pink-50"}`}>
                         <h3 className="font-bold text-lg mb-3 flex items-center gap-2">
                             <img src={nodeIcons["Slack"]} alt="Slack" className="h-6 w-6" /> Slack
                         </h3>
