@@ -2,5 +2,6 @@ export enum Platform {
     ResendEmail = "ResendEmail",
     Telegram = "Telegram",
     Gemini = "Gemini",
-    Form  = "Form"
+    Form  = "Form",
+    Slack = "Slack"
 }
