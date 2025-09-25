@@ -35,7 +35,7 @@ const workflow = useMemo(() => {
 
   useEffect(() => {
     if (workflow) {
-      console.log("Workflow from API:", workflow); 
+      // console.log("Workflow from API:", workflow); 
       const flowNodes = workflowToFlowNodes(workflow);
       const flowEdges = workflowToFlowEdges(workflow);
       setNodes(flowNodes);
@@ -51,8 +51,8 @@ const workflow = useMemo(() => {
   const saveWorkflow = useCallback(
     async (title: string, triggerType: 'Manual' | 'Webhook', webhookConfig?: any) => {
       const workflowNodes = flowToWorkflowNodes(nodes);
-      console.log('Nodes with positions:', nodes); 
-    console.log('Converted workflow nodes:', workflowNodes); 
+    //   console.log('Nodes with positions:', nodes); 
+    // console.log('Converted workflow nodes:', workflowNodes); 
 
       const workflowConnections = flowToWorkflowConnections(edges);
 
@@ -64,7 +64,7 @@ const workflow = useMemo(() => {
         ...(webhookConfig && { webhook: webhookConfig }),
       };
 
-      console.log('Data being sent to API:', data);
+      // console.log('Data being sent to API:', data);
       
       if (id) {
         const updated = await updateMutation.mutateAsync({ id, data });

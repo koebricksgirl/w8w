@@ -150,7 +150,7 @@ Method: POST`}
           <li>
             <strong>Gemini (node1)</strong> — select Gemini credential, then set the prompt. Example prompt:
             <div className="rounded p-2 mt-2 mb-2 bg-white/5 text-sm">
-              <CopyBox className="mt-2"  text="Write a personalized welcome email for {{ $json.body.name }}. They are interested in {{ $json.body.interest }} and enjoy {{ $json.body.hobbies }}. The email should be warm and based on this prompt: {{ $json.body.prompt }}. Return a JSON object with fields: subject, body." />
+              <CopyBox className="mt-2" text="Write a personalized welcome email for {{ $json.body.name }}. They are interested in {{ $json.body.interest }} and enjoy {{ $json.body.hobbies }}. The email should be warm and based on this prompt: {{ $json.body.prompt }}. Return a JSON object with fields: subject, body." />
             </div>
             <p className={textMuted}>
               Note: <code>{"{{ $json.body.* }}"}</code> values come from the webhook body. When hitting the webhook (POST), include these fields in the JSON body or the workflow will lack input and may fail.
@@ -160,9 +160,9 @@ Method: POST`}
           <li>
             <strong>ResendEmail (node2)</strong> — choose Resend credentials, then map fields:
             <ul className="list-disc pl-6 mt-2">
-              <li>To:  <CopyBox className="mt-2"  text="{{ $json.body.email }}" /></li>
-              <li>Subject: <CopyBox className="mt-2"  text="{{ $node.node1.text.subject }}" /> </li>
-              <li>Body: <CopyBox className="mt-2"  text="{{ $node.node1.text.body }}" /> </li>
+              <li>To:  <CopyBox className="mt-2" text="{{ $json.body.email }}" /></li>
+              <li>Subject: <CopyBox className="mt-2" text="{{ $node.node1.text.subject }}" /> </li>
+              <li>Body: <CopyBox className="mt-2" text="{{ $node.node1.text.body }}" /> </li>
             </ul>
             <p className={textMuted}>Here <code>{`$node.node1.text.subject`}</code> and <code>{`$node.node1.text.body`}</code> are values returned by Gemini (node1).</p>
           </li>
@@ -170,7 +170,7 @@ Method: POST`}
           <li>
             <strong>Telegram (node3)</strong> — choose Telegram credentials and set the message. Example message:
             <div className="rounded p-2 mt-2 mb-2 bg-white/5 text-sm">
-              <CopyBox className="mt-2"  text="Sent welcome email to {{ $json.body.name }} ({{ $json.body.email }})
+              <CopyBox className="mt-2" text="Sent welcome email to {{ $json.body.name }} ({{ $json.body.email }})
 
  Details:
 - Interest: {{ $json.body.interest }}
@@ -219,7 +219,7 @@ Email Body:
           <li>
             <strong>Node 1 — Telegram</strong>
             <div className="rounded p-2 mt-2 bg-white/5 text-sm">
-              Message: <CopyBox className="mt-2"  text="Hello I am telegram" />
+              Message: <CopyBox className="mt-2" text="Hello I am telegram" />
             </div>
           </li>
 
@@ -228,7 +228,7 @@ Email Body:
             <div className="rounded p-2 mt-2 bg-white/5 text-sm">
               Credential: {"<select your credential>"}
               To: {"<yourmail>@gmail.com"}
-              Subject: <CopyBox  text="Hello Mail 1" className="mt-2" />
+              Subject: <CopyBox text="Hello Mail 1" className="mt-2" />
               Body: <CopyBox text="{{ $node.node1.message }}" className="mt-2" />
             </div>
           </li>
@@ -237,9 +237,9 @@ Email Body:
             <strong>Node 3 — ResendEmail (separate)</strong>
             <div className="rounded p-2 mt-2 bg-white/5 text-sm">
               Credential: {"<select your credential>"}
-              To: <CopyBox text="<youremail>@gmail.com" className="mt-2"  />
-              Subject: <CopyBox text="Hello mail2" className="mt-2"  />
-              Body: <CopyBox text="Message: {{ $node.node1.message }}" className="mt-2"  />
+              To: <CopyBox text="<youremail>@gmail.com" className="mt-2" />
+              Subject: <CopyBox text="Hello mail2" className="mt-2" />
+              Body: <CopyBox text="Message: {{ $node.node1.message }}" className="mt-2" />
             </div>
             <p className={textMuted}>Note: Node3 is connected to node1, not node2.</p>
           </li>
@@ -248,7 +248,7 @@ Email Body:
             <strong>Node 4 — Telegram</strong>
             <div className="rounded p-2 mt-2 bg-white/5 text-sm">
               Message:
-              <CopyBox className="mt-2"  text="Mail received from gmail 1: {{ $node.node2.body }}
+              <CopyBox className="mt-2" text="Mail received from gmail 1: {{ $node.node2.body }}
 
 Mail received from gmail 2: {{ $node.node3.body }}" />
             </div>
@@ -267,22 +267,22 @@ Mail received from gmail 2: {{ $node.node3.body }}" />
         <h3 className="text-lg font-semibold mb-2">3) Math example (manual)</h3>
         <div className="rounded p-3 mb-3 bg-white/5 text-sm">
           Gemini prompt:
-          <CopyBox className="mt-2"  text="First calculate 3 + 4, then multiply the result by 2, then raise it to the power of 2. Return a json object with field ans" />
+          <CopyBox className="mt-2" text="First calculate 3 + 4, then multiply the result by 2, then raise it to the power of 2. Return a json object with field ans" />
         </div>
         <div className="rounded p-2 bg-white/5 text-sm">
           Telegram message :
-          Query: <CopyBox className="mt-2"  text="{{ $node.node1.query }}" />
-          Response: <CopyBox className="mt-2"  text="{{ $node.node1.text.ans }}" />
+          Query: <CopyBox className="mt-2" text="{{ $node.node1.query }}" />
+          Response: <CopyBox className="mt-2" text="{{ $node.node1.text.ans }}" />
         </div>
 
         <h3 className="text-lg font-semibold mt-4 mb-2">4) Story example (manual)</h3>
         <div className="rounded p-3 mb-3 bg-white/5 text-sm">
           Gemini prompt:
-          <CopyBox className="mt-2"  text="Generate a small story based on kids" />
+          <CopyBox className="mt-2" text="Generate a small story based on kids" />
         </div>
         <div className="rounded p-2 bg-white/5 text-sm">
           Telegram message:
-          <CopyBox className="mt-2"  text="Story: {{ $node.node1.text }}" />
+          <CopyBox className="mt-2" text="Story: {{ $node.node1.text }}" />
         </div>
       </section>
 
@@ -293,14 +293,14 @@ Mail received from gmail 2: {{ $node.node3.body }}" />
 
         <div className="rounded p-3 bg-white/5 text-sm mb-3">
           ResendEmail (node1)
-          To: <CopyBox className="mt-2"  text="youremail@gmail.com" />
-          Subject: <CopyBox className="mt-2"  text="New signup alert" />
-          Body: <CopyBox className="mt-2"  text="New signup: {'{{ $json.body.email }} '}" />
+          To: <CopyBox className="mt-2" text="youremail@gmail.com" />
+          Subject: <CopyBox className="mt-2" text="New signup alert" />
+          Body: <CopyBox className="mt-2" text="New signup: {'{{ $json.body.email }} '}" />
         </div>
 
         <div className="rounded p-3 bg-white/5 text-sm">
           "Telegram (node2)"
-          Message : <CopyBox className="mt-2"  text="Email sent to {{ $node.node1.to }}" />
+          Message : <CopyBox className="mt-2" text="Email sent to {{ $node.node1.to }}" />
         </div>
       </section>
 
@@ -312,7 +312,7 @@ Mail received from gmail 2: {{ $node.node3.body }}" />
         </p>
 
         <div className="rounded p-3 bg-white/5 text-sm">
-          <CopyBox className="mt-2"  text={`Gemini configuration:
+          <CopyBox className="mt-2" text={`Gemini configuration:
 Prompt: {{ $json.body.prompt }}
 Enable Memory: (toggle on) — Gemini will utilize up to last 25 conversations.
 
@@ -343,7 +343,7 @@ Message: Gemini Response: {{ $node.node1.text }}`} />
           <li>
             Call the bot updates endpoint:
             <div className="rounded p-2 mt-2 bg-white/5 text-sm overflow-x-auto">
-              <CopyBox className="mt-2"  text="https://api.telegram.org/bot<botToken>/getUpdates" />
+              <CopyBox className="mt-2" text="https://api.telegram.org/bot<botToken>/getUpdates" />
             </div>
             The response contains an object with <code>chat</code> data — the <code>id</code> value is the chatId.
           </li>
@@ -374,7 +374,7 @@ Message: Gemini Response: {{ $node.node1.text }}`} />
         <h2 className="text-2xl font-semibold mb-3">6) Example — Form → Gemini → Telegram</h2>
 
         <p className="mb-2">
-          This example collects candidate details via a <strong>Form node</strong>, evaluates them with <strong>Gemini</strong>, 
+          This example collects candidate details via a <strong>Form node</strong>, evaluates them with <strong>Gemini</strong>,
           and sends the evaluation to <strong>Telegram</strong>.
         </p>
 
@@ -443,16 +443,21 @@ Submitted Form Response:
         </ul>
       </section>
 
-           <section className={`rounded-xl p-6 mb-8 ${cardBg} border ${isDark ? "border-zinc-700" : "border-zinc-200"}`}>
-        <h2 className="text-2xl font-semibold mb-3">7) Example — Manual Slack Workflow</h2>
+      <section className={`rounded-xl p-6 mb-8 ${cardBg} border ${isDark ? "border-zinc-700" : "border-zinc-200"}`}>
+        <h2 className="text-2xl font-semibold mb-3">7) Example — Manual Slack → Telegram</h2>
 
         <p className="mb-2">
-          Workflow name: <strong>Send Message to Slack</strong> — Type: <strong>Manual</strong>
+          Workflow name: <strong> Slack → Telegram </strong> — Type: <strong>Manual</strong>
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
           <img
-            src="https://pbs.twimg.com/media/G1qfsSpW8AAbvgl?format=jpg&name=medium"
+            src="https://pbs.twimg.com/media/G1qohnDXoAAQkWE?format=jpg&name=large"
+            alt="slack workflow"
+            className="rounded shadow-md w-full"
+          />
+           <img
+            src="https://pbs.twimg.com/media/G1qoisxXMAAC98V?format=jpg&name=large"
             alt="slack workflow"
             className="rounded shadow-md w-full"
           />
@@ -474,14 +479,42 @@ Submitted Form Response:
                   Get channel IDs via{" "}
                   <code>conversations.list</code> Slack API and make sure your bot is{" "}
                   <code>/invite</code>d to that channel.
-                  <CopyBox text="https://slack.com/api/conversations.list" className="mt-2"/>
-                  If you want to know more how to get channel Id and set up credentials for slack go <span 
-                  className="text-blue-400 underline cursor-pointer"
-                  onClick={() => {
-                    navigate("/docs/2")
-                  }}
+                  <CopyBox text="https://slack.com/api/conversations.list" className="mt-2" />
+                  If you want to know more how to get channel Id and set up credentials for slack go <span
+                    className="text-blue-400 underline cursor-pointer"
+                    onClick={() => {
+                      navigate("/docs/2")
+                    }}
                   >here</span>
                 </p>
+              </li>
+
+              <li>
+                <strong>Telegram (node2)</strong>
+                <ul className="list-disc pl-6 mt-2 space-y-1">
+                  <li>
+                    Credential:{" "}
+                    <CopyBox text="My Telegram Bot" className="mt-2" />
+                  </li>
+                  <li>
+                    Message:{" "}
+                    <CopyBox
+                      text={`Slack message relayed:
+{{ $node.node1.text }}
+
+(Sent from Slack channel {{ $node.node1.channel }})`}
+                      className="mt-2"
+                    />
+                  </li>
+                  <li>
+                    Channel Id:{" "}
+                    <CopyBox text="{{ $node.node1.channel }}" className="mt-2" />
+                    <p className={textMuted}>
+                      Here we reuse the Slack <code>.channel & .text</code> output so that Telegram posts into the
+                      same channel context dynamically.
+                    </p>
+                  </li>
+                </ul>
               </li>
               <li>
                 Message:{" "}

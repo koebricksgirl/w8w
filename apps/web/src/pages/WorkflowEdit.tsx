@@ -15,13 +15,14 @@ import { useThemeStore } from "../store/useThemeStore";
 import { nodeTypes } from "../components/nodes/nodeTypes";
 import { useWorkflowEditor } from "../hooks/useWorkflowEditor";
 import { useCredentials } from "../hooks/useCredentials";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import NodeConfigDialog from "../components/nodes/NodeConfigDialog";
 import { nodeIcons } from "../lib/nodeIcons";
 import { workflows, BACKEND_URL } from "../lib/api";
 import { useWorkflowEvents } from "../hooks/useWorkflowEvents";
 
 import "@xyflow/react/dist/style.css";
+import { CheckIcon, Cross2Icon, Pencil2Icon } from "@radix-ui/react-icons";
 
 function WorkflowEditContent() {
     const { id } = useParams();
@@ -40,7 +41,14 @@ function WorkflowEditContent() {
     const [selectedNode, setSelectedNode] = useState<Node<FlowNodeData> | null>(null);
     const [showWebhookInfo, setShowWebhookInfo] = useState(false);
 
+    const [isEditingTitle, setIsEditingTitle] = useState(false);
+    const [workflowTitle, setWorkflowTitle] = useState("");
+
     const { setNodes } = useReactFlow();
+
+        useEffect(() => {
+    if (workflow?.title) setWorkflowTitle(workflow.title);
+  }, [workflow?.title]);
 
     const availablePlatforms = Array.from(
         new Set([
@@ -125,12 +133,55 @@ function WorkflowEditContent() {
         );
     }
 
+
+
+
     return (
         <div className="flex flex-col md:flex-row h-screen">
             <aside className="w-full md:w-72 lg:w-80 border-r p-4 space-y-4 bg-white dark:bg-zinc-900 overflow-y-auto">
                 <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                        <h3 className="font-bold">{workflow.title}</h3>
+                        {isEditingTitle ? (
+                            <div className="flex items-center gap-2">
+                                <input
+                                    value={workflowTitle}
+                                    onChange={(e) => setWorkflowTitle(e.target.value)}
+                                    className={`px-2 py-1 rounded border text-sm ${isDark
+                                        ? "bg-zinc-800 border-zinc-700 text-white"
+                                        : "bg-white border-zinc-300 text-black"
+                                        }`}
+                                    autoFocus
+                                />
+                                <button
+                                    onClick={() => setIsEditingTitle(false)}
+                                    className="p-1 rounded hover:bg-zinc-200 dark:hover:bg-zinc-700"
+                                    title="Save title"
+                                >
+                                    <CheckIcon className="w-4 h-4 text-green-500" />
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        setWorkflowTitle(workflow.title);
+                                        setIsEditingTitle(false);
+                                    }}
+                                    className="p-1 rounded hover:bg-zinc-200 dark:hover:bg-zinc-700"
+                                    title="Cancel"
+                                >
+                                    <Cross2Icon className="w-4 h-4 text-red-500" />
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="flex items-center gap-2">
+                                <h3 className="font-bold">{workflowTitle}</h3>
+                                <button
+                                    onClick={() => setIsEditingTitle(true)}
+                                    className="p-1 rounded hover:bg-zinc-200 dark:hover:bg-zinc-700"
+                                    title="Edit title"
+                                >
+                                    <Pencil2Icon className="w-4 h-4" />
+                                </button>
+                            </div>
+                        )}
                         {workflow.triggerType === "Manual" ? (
                             <button
                                 onClick={runWorkflow}
@@ -274,7 +325,7 @@ function WorkflowEditContent() {
                 <button
                     onClick={async () => {
                         try {
-                            await saveWorkflow(workflow.title, workflow.triggerType as "Manual" | "Webhook");
+                            await saveWorkflow(workflowTitle, workflow.triggerType as "Manual" | "Webhook");
                             alert("Workflow updated successfully!");
                         } catch (error) {
                             console.error("Error saving workflow:", error);
