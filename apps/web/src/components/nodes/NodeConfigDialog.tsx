@@ -1,10 +1,10 @@
 import { Dialog, DialogClose, DialogContent, DialogTitle } from "@radix-ui/react-dialog";
 import { useState, useMemo } from "react";
 import { useThemeStore } from "../../store/useThemeStore";
-import { useWorkflowEditor } from "../../hooks/useWorkflowEditor";
-import type { Node } from '@xyflow/react';
+import type { Edge, Node } from '@xyflow/react';
 import type { FlowNodeData, Workflow, WorkflowCredential } from '../../types/workflow';
 import FormNodeConfig from "./FormNodeConfig";
+import { getAncestorNodes } from "../../utils/getAnscestorNodes";
 
 interface VariableOption {
   label: string;
@@ -16,11 +16,14 @@ type NodeConfigDialogProps = {
   node: Node<FlowNodeData>;
   credentials: WorkflowCredential[];
   workflow: Workflow | null;
+  nodes: Node<FlowNodeData>[];
+  edges: Edge[];
   onClose: () => void;
   onSave: (data: FlowNodeData) => void;
 };
 
-export default function NodeConfigDialog({ node, credentials, onClose, onSave, workflow }: NodeConfigDialogProps) {
+
+export default function NodeConfigDialog({ node, credentials, onClose, onSave, workflow, nodes, edges }: NodeConfigDialogProps) {
   const [credentialId, setCredentialId] = useState<string>(node.data.credentialsId || "");
 
   const [config, setConfig] = useState<Record<string, any>>(() => {
@@ -45,7 +48,7 @@ export default function NodeConfigDialog({ node, credentials, onClose, onSave, w
         break;
       case 'Form':
         defaultConfig.title = node.data.config?.title || '',
-        defaultConfig.fields = node.data.config?.fields || []
+          defaultConfig.fields = node.data.config?.fields || []
         break;
     }
 
@@ -54,7 +57,6 @@ export default function NodeConfigDialog({ node, credentials, onClose, onSave, w
 
   const { theme } = useThemeStore();
   const isDark = theme === 'dark';
-  const { nodes, edges } = useWorkflowEditor(node.data.workflowId);
 
 
   const availableVariables = useMemo(() => {
@@ -68,35 +70,46 @@ export default function NodeConfigDialog({ node, credentials, onClose, onSave, w
       });
     }
 
-    const incomingNodes = edges
-      .filter(edge => edge.target === node.id)
-      .map(edge => nodes.find(n => n.id === edge.source))
-      .filter(Boolean);
+    const ancestorNodes = getAncestorNodes(node.id, edges, nodes);
 
-    incomingNodes.forEach(sourceNode => {
+    ancestorNodes.forEach(sourceNode => {
       if (!sourceNode) return;
 
-      let outputFields = '';
+      let outputFields: string[] = [];
       switch (sourceNode.type) {
         case 'Gemini':
-          outputFields = '.text';
+          outputFields = ['.text', '.query'];
           break;
         case 'ResendEmail':
-          outputFields = '';
+          outputFields = ['.to', '.subject', '.body'];
           break;
         case 'Telegram':
-          outputFields = '';
+          outputFields = ['.message'];
           break;
         case 'Slack':
-          outputFields = '';
+          outputFields = ['.channel', '.text'];
+          break;
+        case 'Form':
+          const fields = sourceNode.data?.config?.fields || [];
+          fields.forEach((field: any) => {
+            variables.push({
+              label: `${sourceNode.id} (Form) - ${field.key}`,
+              value: `{{ $json.body.${field.key} }}`,
+              tooltip: `Form field: ${field.key}\nPosition in Flow: ${sourceNode.id}`
+            });
+          });
           break;
       }
 
-      variables.push({
-        label: `${sourceNode.id} (${sourceNode.data?.label || sourceNode.type})`,
-        value: `{{ $node.${sourceNode.id}${outputFields} }}`,
-        tooltip: `Node Type: ${sourceNode.type}\nPosition in Flow: ${sourceNode.id}`
-      });
+      if (sourceNode.type !== 'Form') {
+        outputFields.forEach(field => {
+          variables.push({
+            label: `${sourceNode.id} (${sourceNode.data?.label || sourceNode.type})${field}`,
+            value: `{{ $node.${sourceNode.id}${field} }}`,
+            tooltip: `Node Type: ${sourceNode.type}\nPosition in Flow: ${sourceNode.id}`
+          });
+        })
+      }
     });
 
     return variables;
@@ -144,8 +157,8 @@ export default function NodeConfigDialog({ node, credentials, onClose, onSave, w
           helper: 'Can include variables from webhook or connected nodes'
         };
       case 'Slack':
-        switch (key){
-          case "channel": 
+        switch (key) {
+          case "channel":
             return {
               label: "Slack Cannel Id",
               placeholder: "Enter your slack channel Id",
@@ -191,7 +204,7 @@ export default function NodeConfigDialog({ node, credentials, onClose, onSave, w
 
 
   const formEntry = workflow?.form?.find((f) => f.nodeId === node.id) || null;
-  console.log("Dialog node.id:", node.id, "workflow form:", workflow?.form);
+  // console.log("Dialog node.id:", node.id, "workflow form:", workflow?.form);
 
 
   return (
