@@ -46,9 +46,9 @@ function WorkflowEditContent() {
 
     const { setNodes } = useReactFlow();
 
-        useEffect(() => {
-    if (workflow?.title) setWorkflowTitle(workflow.title);
-  }, [workflow?.title]);
+    useEffect(() => {
+        if (workflow?.title) setWorkflowTitle(workflow.title);
+    }, [workflow?.title]);
 
     const availablePlatforms = Array.from(
         new Set([
@@ -138,7 +138,7 @@ function WorkflowEditContent() {
 
     return (
         <div className="flex flex-col md:flex-row h-screen">
-            <aside className={`w-full md:w-72 lg:w-80 border-r p-4 space-y-4  ${isDark?"bg-zinc-900":"bg-white"} overflow-y-auto`}>
+            <aside className={`w-full md:w-72 lg:w-80 border-r p-4 space-y-4  ${isDark ? "bg-zinc-900" : "bg-white"} overflow-y-auto`}>
                 <div className="space-y-4">
                     <div className="flex items-center justify-between">
                         {isEditingTitle ? (
@@ -154,7 +154,7 @@ function WorkflowEditContent() {
                                 />
                                 <button
                                     onClick={() => setIsEditingTitle(false)}
-                                    className={`p-1 rounded ${isDark?"hover:bg-zinc-700":"hover:bg-zinc-200"}`}
+                                    className={`p-1 rounded ${isDark ? "hover:bg-zinc-700" : "hover:bg-zinc-200"}`}
                                     title="Save title"
                                 >
                                     <CheckIcon className="w-4 h-4 text-green-500" />
@@ -164,7 +164,7 @@ function WorkflowEditContent() {
                                         setWorkflowTitle(workflow.title);
                                         setIsEditingTitle(false);
                                     }}
-                                    className={`p-1 rounded ${isDark?"hover:bg-zinc-700":"hover:bg-zinc-200"}`}
+                                    className={`p-1 rounded ${isDark ? "hover:bg-zinc-700" : "hover:bg-zinc-200"}`}
                                     title="Cancel"
                                 >
                                     <Cross2Icon className="w-4 h-4 text-red-500" />
@@ -175,7 +175,7 @@ function WorkflowEditContent() {
                                 <h3 className="font-bold">{workflowTitle}</h3>
                                 <button
                                     onClick={() => setIsEditingTitle(true)}
-                                    className={`p-1 rounded ${isDark?"hover:bg-zinc-700":"hover:bg-zinc-200"}`}
+                                    className={`p-1 rounded ${isDark ? "hover:bg-zinc-700" : "hover:bg-zinc-200"}`}
                                     title="Edit title"
                                 >
                                     <Pencil2Icon className="w-4 h-4" />
@@ -371,6 +371,8 @@ function WorkflowEditContent() {
                 <NodeConfigDialog
                     node={selectedNode}
                     workflow={workflow}
+                    nodes={nodes}
+                    edges={edges}
                     credentials={credentials.filter((c: WorkflowCredential) => c.platform === selectedNode.type)}
                     onClose={() => setSelectedNode(null)}
                     onSave={(data) => {

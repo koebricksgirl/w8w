@@ -290,6 +290,8 @@ function WorkflowEditorContent() {
         workflow={null}
           node={selectedNode}
           credentials={credentials.filter((c: WorkflowCredential) => c.platform === selectedNode.type)}
+          nodes={nodes}
+          edges={edges}
           onClose={() => setSelectedNode(null)}
           onSave={(data) => {
             setNodes((nds) =>
